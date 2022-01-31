@@ -20,7 +20,7 @@ r3= (w&x&y&z)|(~w&~x&~y&~z);
 
 end                                       // Finish the Always block
 
-endmodule                                 //Module End
+endmodule                                 //Mod End
 
 //----------------------------------------------------------------------
 
