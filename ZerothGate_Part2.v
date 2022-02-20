@@ -45,6 +45,8 @@ module FullAdder(A,B,C,carry,sum);
 		carry= ((A^B)&C)|(A&B);
 	  end
 //---------------------------------------------
+endmodule
+
 module AddSub(inputA,inputB,mode,sum,carry,overflow);
     input [15:0] inputA;
 	input [15:0] inputB;
@@ -53,7 +55,7 @@ module AddSub(inputA,inputB,mode,sum,carry,overflow);
 	output carry;
     output overflow;
 
-	wire c0; //MOde assigned to C0
+	wire c0; //Mode assigned to C0
 
     wire b0,b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15; //XOR Interfaces
 	wire c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13,c14,c15,c16; //Carry Interfaces
@@ -103,40 +105,8 @@ module AddSub(inputA,inputB,mode,sum,carry,overflow);
 	assign overflow=c16^ c15;
 
 endmodule
-endmodule
-//----------------------------------------------------------------------
-module Breadboard	(w,x,y,z,r0,r1,r2,r3,r4,r5,r6,r7,r8,r9);  //Module Header
-input w,x,y,z;                           //Specify inputs
-output r0,r1,r2,r3,r4,r5,r6,r7,r8,r9;                       //Specify outputs
-reg r0,r1,r2,r3,r4,r5,r6,r7,r8,r9;                            //Output is a memory area.
-wire w,x,y,z;
 
-always @ (w,x,y,z,r0,r1,r2,r3,r4,r5,r6,r7,r8,r9) begin
-
-//All function minterm equations
-r0= (~w&~x&~y&z)|(~w&x&~y&z)|(~w&x&y&~z)|(w&~x&~y&~z)|(w&~x&~y&z)|(w&~x&y&~z)|(w&~x&y&z)|(w&x&~y&z)|(w&x&y&~z);
-
-r1= (~w&~x&y&z)|(~w&x&~y&~z)|(~w&x&y&~z)|(~w&x&y&z)|(w&~x&y&z)|(w&x&~y&~z)|(w&x&~y&z)|(w&x&y&~z)|(w&x&y&z);
-
-r2= (~w&~x&~y&~z)|(~w&~x&y&z)|(~w&x&~y&~z)|(~w&x&~y&z)|(~w&x&y&z)|(w&~x&~y&z)|(w&~x&y&~z)|(w&~x&y&z)|(w&x&~y&~z)|(w&x&y&z);
-
-r3= (~w&~x&~y&z)|(~w&~x&y&~z)|(~w&~x&y&z)|(~w&x&~y&~z)|(w&~x&~y&~z)|(w&~x&~y&z)|(w&~x&y&z)|(w&x&~y&z);
-
-r4 = (~w&~x&~y&~z)|(~w&~x&y&~z)|(~w&~x&y&z)|(~w&x&~y&z)|(~w&x&y&~z)|(~w&x&y&z)|(w&x&~y&~z)|(w&x&~y&z);
-
-r5 = (~w&~x&y&z)|(~w&x&~y&~z)|(~w&x&~y&z)|(~w&x&y&~z)|(~w&x&y&z)|(w&~x&~y&~z)|(w&x&~y&~z)|(w&x&y&~z)|(w&x&y&z);
-
-r6 = (~w&~x&~y&z)|(~w&x&~y&~z)|(w&~x&~y&~z)|(w&~x&y&z)|(w&x&~y&~z)|(w&x&~y&z)|(w&x&y&~z)|(w&x&y&z);
-
-r7 = (~w&~x&~y&~z)|(~w&~x&y&z)|(~w&x&~y&~z)|(~w&x&y&z)|(w&~x&~y&~z)|(w&~x&~y&z)|(w&~x&y&z)|(w&x&y&~z);
-
-r8= (~w&~x&~y&~z)|(~w&~x&y&~z)|(~w&~x&y&z)|(~w&x&~y&~z)|(~w&x&~y&z)|(~w&x&y&~z)|(~w&x&y&z)|(w&~x&~y&z)|(w&x&~y&~z)|(w&x&~y&z);
-
-r9 = (~w&~x&y&~z)|(~w&x&~y&z)|(~w&x&y&z)|(w&~x&~y&z)|(w&~x&y&~z)|(w&x&~y&~z)|(w&x&~y&z)|(w&x&y&z);
-
-end                                       // Finish the Always block
-
-endmodule                                 //Module End
+//----------------------------------------------------------------------                              //Module End
 
 //----------------------------------------------------------------------
 
@@ -146,10 +116,11 @@ module testbench();
 //Data Inputs
 reg [15:0]dataA;
 reg [15:0]dataB;
+reg [0:0]mode;
 reg [3:0]opcode;
 
 //Outputs
-wire result; //32 bits
+wire [31:0]result; //32 bits
 wire carry;
 wire err; //2 bits
 
