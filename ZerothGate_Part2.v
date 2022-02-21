@@ -51,7 +51,7 @@ module AddSub(inputA,inputB,mode,sum,carry,overflow);
     input [15:0] inputA;
 	input [15:0] inputB;
     input mode;
-    output [31:0] sum;
+    output [15:0] sum;
 	output carry;
     output overflow;
 
@@ -133,12 +133,12 @@ begin
 //        0123456789ABCDEF
 $display("Addition");
 mode=0;
-dataA=4'b0100;
-dataB=4'b0010;
+dataA=16'b1111111111111111;
+dataB=16'b1111111111111111;
 #100;
-$write("mode=%b;",mode);
-$write("%b+%b=[%b][%b];",dataA,dataB,carry,result);
-$write("%d+%d=[%d][%d];",dataA,dataB,carry,result);
+$write("mode=%b; ",mode);
+$write("%b+%b=[%b][%b]; ",dataA,dataB,carry,result);
+$write("%d+%d=[%d][%d]; ",dataA,dataB,carry,result);
 $display("err=%b",err);
 
 end
