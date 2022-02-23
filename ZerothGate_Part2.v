@@ -386,15 +386,13 @@ Bit16Mult mul(dataA, dataB, result);
 initial
 begin
 //        0123456789ABCDEF
-$display("Addition");
+$display("multi");
 mode=0;
-dataA=16'b1111111111111111;
-dataB=16'b1111111111111111;
+dataA=16'b1111;
+dataB=16'b111;
 #100;
-$write("mode=%b; ",mode);
-$write("%b+%b=[][%b]; ",dataA,dataB,result);
-$write("%d+%d=[][%d]; ",dataA,dataB,result);
-$display("err=%b",err);
+$write("%b*%b=[][%b]; ",dataA,dataB,result);
+$write("%d*%d=[][%d]; ",dataA,dataB,result);
 
 end
 
