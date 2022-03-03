@@ -343,6 +343,59 @@ C[31] = Carry14[15];
 end
 endmodule
 
+module Divider(A, B, C, err);
+input [15:0] A;
+input [15:0] B;
+output[15:0] C;
+output err;
+
+wire [15:0] A;
+wire [15:0] B;
+reg [15:0] C;
+reg err;
+
+always@(*)
+begin
+	err = 0;
+
+	if (B==0)
+		begin
+			err = 1;
+		end
+	else
+		begin
+			C = A / B;
+		end
+end
+
+endmodule
+
+module Modder(A, B, C, err);
+input [15:0] A;
+input [15:0] B;
+output[15:0] C;
+output err;
+
+wire [15:0] A;
+wire [15:0] B;
+reg [15:0] C;
+reg err;
+
+always@(*)
+begin
+	assign err = 0;
+
+	if (B==0)
+		begin
+			assign err = 1;
+		end
+	else
+		begin
+			C = A % B;
+		end
+end
+
+endmodule
 
 module testbench();
 
@@ -354,42 +407,58 @@ reg mode;
 
 //Outputs
 wire[31:0]result;
+wire[15:0]result1;
+wire[15:0]result2;
+wire[15:0]result3;
 wire carry;
 wire err;
 
 //Instantiate the Modules
-//AddSub addsub(dataA,dataB,mode,result,carry,err);
+AddSub addsub(dataA,dataB,mode,result1,carry,err);
 Multiplier mult(dataA, dataB, result);
+Divider div(dataA, dataB, result2, err);
+Modder mod(dataA, dataB, result3, err);
 
 
 
 initial
 begin
 
-
+dataA=16'b0000000000010000; 
+dataB=16'b0000000000000000;
 $display("Addition");
 mode=0; 
-dataA=16'b0000000000000010; 
-dataB=16'b0000000000000010;
 #100;
 $write("mode=%b;",mode);
-$write("%b+%b=[%b];",dataA,dataB,result);
-$write("%d+%d=[%d];",dataA,dataB,result);
+$write("%b+%b=[%b];",dataA,dataB,result1);
+$write("%d+%d=[%d];",dataA,dataB,result1);
 $display("err=%b",err);
 
-$display("Mutiplication");
-mode=0;
-dataA=16'b0000000000000110; 
-dataB=16'b0000000000001110;
+$display("Subtraction");
+mode=1; 
 #100;
 $write("mode=%b;",mode);
+$write("%b-%b=[%b];",dataA,dataB,result1);
+$write("%d-%d=[%d];",dataA,dataB,result1);
+$display("err=%b",err);
+
+$display("Multiplication");
+#100;
 $write("%b*%b=[%b];",dataA,dataB,result);
 $write("%d*%d=[%d];",dataA,dataB,result);
 $display("err=%b",err);
 
-dataA = 0;
-dataB = 0;
+#100
+$display("Division");
+$write("%b/%b=[%b];",dataA,dataB,result2);
+$write("%d/%d=[%d];",dataA,dataB,result2);
+$display("err=%b",err);
 
+#100
+$display("Modulus");
+$write("%bmod%b=[%b];",dataA,dataB,result3);
+$write("%dmod%d=[%d];",dataA,dataB,result3);
+$display("err=%b",err);
 
 end
 endmodule
