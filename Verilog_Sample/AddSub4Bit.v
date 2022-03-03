@@ -49,14 +49,12 @@ module FullAdder(A,B,C,carry,sum);
 	
 endmodule
 
-//ADDITION OPCODE = 0010
-//SUBTRACTION OPCODE = 0011
-module AddSub(inputA,inputB,mode,sum,overflow);
+module AddSub(inputA,inputB,mode,sum,carry,overflow);
     input [15:0] inputA;
 	input [15:0] inputB;
     input mode;
     output [15:0] sum;
-	//output carry;
+	output carry;
     output overflow;
 
 	wire c0; //MOde assigned to C0
@@ -84,6 +82,7 @@ module AddSub(inputA,inputB,mode,sum,overflow);
 	assign b14 = inputB[14] ^ mode;
 	assign b15 = inputB[15] ^ mode;
 
+
 	
  
 	FullAdder FA0(inputA[0],b0,  c0,c1,sum[0]);
@@ -104,17 +103,12 @@ module AddSub(inputA,inputB,mode,sum,overflow);
 	FullAdder FA14(inputA[14],b14,  c14,c15,sum[14]);
 	FullAdder FA15(inputA[15],b15,  c15,c16,sum[15]);
 
-	//assign carry=c16;
-	assign overflow=c16;
-	always@(*)
-	begin
-		$display("%b %b %b",c15, c16, overflow);
-	end
+	assign carry=c16;
+	assign overflow=c16^c15;
  
 endmodule
 
 module SixteenBitFullAdder(A,B,C,Carry,Sum);
-	
 	input [15:0] A;
 	input [15:0] B;
 	input C;
@@ -132,40 +126,15 @@ module SixteenBitFullAdder(A,B,C,Carry,Sum);
 
 	FullAdder FA8(A[8],B[8],Carry[7],Carry[8],Sum[8]);
 	FullAdder FA9(A[9],B[9],Carry[8],Carry[9],Sum[9]);
-	FullAdder FA10(A[10],B[10],Carry[9],Carry[10],Sum[10]);
-	FullAdder FA11(A[11],B[11],Carry[10],Carry[11],Sum[11]);
+	FullAdder FA10(A[10],B[10],Carry[9],Carry[10],Sum[2]);
+	FullAdder FA11(A[11],B[11],Carry[10],Carry[11],Sum[3]);
 
 	FullAdder FA12(A[12],B[12],Carry[11],Carry[12],Sum[12]);
 	FullAdder FA13(A[13],B[13],Carry[12],Carry[13],Sum[13]);
 	FullAdder FA14(A[14],B[14],Carry[13],Carry[14],Sum[14]);
 	FullAdder FA15(A[15],B[15],Carry[14],Carry[15],Sum[15]);
-	
 endmodule
 
-module Dec4x16(binary,onehot);
-	input [3:0] binary;
-	output [15:0]onehot;
-	
-	assign onehot[ 0]=~binary[3]&~binary[2]&~binary[1]&~binary[0];
-	assign onehot[ 1]=~binary[3]&~binary[2]&~binary[1]& binary[0];
-	assign onehot[ 2]=~binary[3]&~binary[2]& binary[1]&~binary[0];
-	assign onehot[ 3]=~binary[3]&~binary[2]& binary[1]& binary[0];
-	assign onehot[ 4]=~binary[3]& binary[2]&~binary[1]&~binary[0];
-	assign onehot[ 5]=~binary[3]& binary[2]&~binary[1]& binary[0];
-	assign onehot[ 6]=~binary[3]& binary[2]& binary[1]&~binary[0];
-	assign onehot[ 7]=~binary[3]& binary[2]& binary[1]& binary[0];
-	assign onehot[ 8]= binary[3]&~binary[2]&~binary[1]&~binary[0];
-	assign onehot[ 9]= binary[3]&~binary[2]&~binary[1]& binary[0];
-	assign onehot[10]= binary[3]&~binary[2]& binary[1]&~binary[0];
-	assign onehot[11]= binary[3]&~binary[2]& binary[1]& binary[0];
-	assign onehot[12]= binary[3]& binary[2]&~binary[1]&~binary[0];
-	assign onehot[13]= binary[3]& binary[2]&~binary[1]& binary[0];
-	assign onehot[14]= binary[3]& binary[2]& binary[1]&~binary[0];
-	assign onehot[15]= binary[3]& binary[2]& binary[1]& binary[0];
-	
-endmodule
-
-//OPCODE = 0100
 module Multiplier(A,B,C);
 input  [15:0] A;
 input  [15:0] B;
@@ -371,151 +340,9 @@ C[29] = Sum14[14];
 C[30] = Sum14[15];
 C[31] = Carry14[15];
 end
-endmodule
-
-//OPCODE = 0101
-module Divider(A, B, C, err);
-input [15:0] A;
-input [15:0] B;
-output[15:0] C;
-output err;
-
-wire [15:0] A;
-wire [15:0] B;
-reg [15:0] C;
-reg err;
-
-always@(*)
-begin
-	err = 0;
-
-	if (B==0)
-		begin
-			err = 1;
-			$write("ERROR DIVIDE %b", err);
-		end
-	else
-		begin
-			C = A / B;
-		end
-end
 
 endmodule
 
-//OPCODE = 0110
-module Modder(A, B, C, err);
-input [15:0] A;
-input [15:0] B;
-output[15:0] C;
-output err;
-
-wire [15:0] A;
-wire [15:0] B;
-reg [15:0] C;
-reg err;
-
-always@(*)
-begin
-	assign err = 0;
-
-	if (B==0)
-		begin
-			assign err = 1;
-		end
-	else
-		begin
-			C = A % B;
-		end
-end
-
-endmodule
-
-module StructMux(channels, select, b);
-input [15:0][31:0] channels;
-input      [15:0] select;
-output      [31:0] b;
-
-
-	assign b = ({32{select[15]}} & channels[15]) | 
-               ({32{select[14]}} & channels[14]) |
-			   ({32{select[13]}} & channels[13]) |
-			   ({32{select[12]}} & channels[12]) |
-			   ({32{select[11]}} & channels[11]) |
-			   ({32{select[10]}} & channels[10]) |
-			   ({32{select[ 9]}} & channels[ 9]) | 
-			   ({32{select[ 8]}} & channels[ 8]) |
-			   ({32{select[ 7]}} & channels[ 7]) |
-			   ({32{select[ 6]}} & channels[ 6]) | //MOD
-			   ({32{select[ 5]}} & channels[ 5]) | //DIVIDE
-			   ({32{select[ 4]}} & channels[ 4]) | //MULTIPLY
-			   ({32{select[ 3]}} & channels[ 3]) | //SUBTRACT
-			   ({32{select[ 2]}} & channels[ 2]) | //ADD
-               ({32{select[ 1]}} & channels[ 1]) | 
-               ({32{select[ 0]}} & channels[ 0]) ;
-
-endmodule
-
-module breadboard(A, B, C, opcode, error);
-input [15:0] A;
-input [15:0] B;
-input [3:0] opcode;
-wire [15:0] A;
-wire [15:0] B;
-wire [3:0] opcode;
-
-output [1:0]error;
-reg [1:0]error;
-//----------------------------------
-output [31:0] C;
-reg [31:0] C;
-//----------------------------------
-wire [15:0][31:0] channels;
-wire [15:0] select;
-wire [31:0] b;
-
-wire[15:0] outputADD;
-wire[31:0] outputMULT;
-wire[15:0] outputDIV;
-wire[15:0] outputMOD;
-wire addError;
-wire divError;
-
-wire [15:0] unknown;
-
-Dec4x16 dec1(opcode, select);
-StructMux mux1(channels, select, b);
-AddSub adder(A, B, opcode[0], outputADD, addError);
-Multiplier mult(A, B, outputMULT);
-Divider div(A, B, outputDIV, divError);
-Modder mod(A, B, outputMOD, divError);
-
-
-
-assign channels[ 0]={16'b0000,unknown};
-assign channels[ 1]={16'b0000,unknown};
-assign channels[ 2]={16'b0000,outputADD};
-assign channels[ 3]={16'b0000,outputADD};
-assign channels[ 4]=outputMULT;
-assign channels[ 5]={16'b0000,outputDIV};
-assign channels[ 6]={16'b0000,outputMOD};
-assign channels[ 7]={16'b0000,unknown};
-assign channels[ 8]={16'b0000,unknown};
-assign channels[ 9]={16'b0000,unknown};
-assign channels[10]={16'b0000,unknown};
-assign channels[11]={16'b0000,unknown};
-assign channels[12]={16'b0000,unknown};
-assign channels[13]={16'b0000,unknown};
-assign channels[14]={16'b0000,unknown};
-assign channels[15]={16'b0000,unknown};
-
-
-always@(*)
-begin
-	assign error = {divError, addError};
-	assign C=b;
-end
-
-endmodule
 
 module testbench();
 
@@ -523,30 +350,91 @@ module testbench();
 //Data Inputs
 reg [15:0]dataA;
 reg [15:0]dataB;
-reg [3:0]op;
-wire [1:0]err;
+reg mode;
 
 //Outputs
 wire[31:0]result;
-
-
+wire carry;
+wire err;
 
 //Instantiate the Modules
-breadboard m (dataA, dataB, result, op, err);
+//AddSub addsub(dataA,dataB,mode,result,carry,err);
+Multiplier mult(dataA, dataB, result);
+
+
 
 initial
 begin
-
-dataA=16'b0111111111111111; 
-dataB=16'b0111111111111111;
-op=4'b0010;
-$display("sedf");
+//        0123456789ABCDEF
+$display("Addition");
+mode=1; 
+dataA=16'b0000000000000010; 
+dataB=16'b0000000000000010;
 #100;
-$write("opcode=%b;",op);
+$write("mode=%b;",mode);
 $write("%b+%b=[%b];",dataA,dataB,result);
 $write("%d+%d=[%d];",dataA,dataB,result);
 $display("err=%b",err);
 
 
+// mode=0; 
+// dataA=16'b1111011111110111;
+// dataB=16'b0000111000001110;
+// #100;
+// $write("mode=%b;",mode);
+// $write("%b+%b=[%b][%b];",dataA,dataB,carry,result);
+// $write("%d+%d=[%d][%d];",dataA,dataB,carry,result);
+// $display("err=%b",err);
+
+
+// mode=0; 
+// dataA=16'b1010111010101110;
+// dataB=16'b1100110111001101;
+// #100;
+// $write("mode=%b;",mode);
+// $write("%b+%b=[%b][%b];",dataA,dataB,carry,result);
+// $write("%d+%d=[%d][%d];",dataA,dataB,carry,result);
+// $display("err=%b",err);
+
+
+// $display("Subtraction");
+// mode=1; 
+// dataA=16'b0100010110010001; 
+// dataB=16'b1001000101000101;
+// #100;
+// $write("mode=%b;",mode);
+// $write("%b-%b=[%b][%b];",dataA,dataB,carry,result);
+// $write("%d-%d=[%d][%d];",dataA,dataB,carry,result);
+// $display("err=%b",err);
+
+
+// mode=1; 
+// dataA=16'b1110111100111010;
+// dataB=16'b1110111100111010;
+// #100;
+// $write("mode=%b;",mode);
+// $write("%b-%b=[%b][%b];",dataA,dataB,carry,result);
+// $write("%d-%d=[%d][%d];",dataA,dataB,carry,result);
+// $display("err=%b",err);
+
+
+// mode=1; 
+// dataA=16'b0111110101011111;
+// dataB=16'b0101111101111101;
+// #100;
+// $write("mode=%b;",mode);
+// $write("%b-%b=[%b][%b];",dataA,dataB,carry,result);
+// $write("%d-%d=[%d][%d];",dataA,dataB,carry,result);
+// $display("err=%b",err);
+// #100
+// dataA = 16'b0000000000001001;
+// dataB = 16'b0000000000001100;
+// $display("test = %b", dataA & dataB);
+
+
 end
+
+
+
+
 endmodule
