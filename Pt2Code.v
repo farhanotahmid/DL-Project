@@ -56,7 +56,6 @@ module AddSub(inputA,inputB,mode,sum,overflow);
 	input [15:0] inputB;
     input mode;
     output [15:0] sum;
-	//output carry;
     output overflow;
 
 	wire c0; //MOde assigned to C0
@@ -108,7 +107,7 @@ module AddSub(inputA,inputB,mode,sum,overflow);
 	assign overflow=c16;
 	always@(*)
 	begin
-		$display("%b %b %b",c15, c16, overflow);
+		//$display("%b %b %b",c15, c16, overflow);
 	end
  
 endmodule
@@ -392,7 +391,7 @@ begin
 	if (B==0)
 		begin
 			err = 1;
-			$write("ERROR DIVIDE %b", err);
+			//$write("ERROR DIVIDE %b", err);
 		end
 	else
 		begin
@@ -537,15 +536,87 @@ breadboard m (dataA, dataB, result, op, err);
 initial
 begin
 
-dataA=16'b0111111111111111; 
-dataB=16'b0111111111111111;
-op=4'b0010;
-$display("sedf");
-#100;
-$write("opcode=%b;",op);
-$write("%b+%b=[%b];",dataA,dataB,result);
-$write("%d+%d=[%d];",dataA,dataB,result);
-$display("err=%b",err);
+//Two numbers less than 250 Addition
+dataA=16'b0000000000111111; 
+dataB=16'b0000000000001111;
+op=4'b0010; //Addition Opcode 2
+
+#200;
+$display("[Input A: %d, Input B: %d] [Add:%b] [Output: %d, Error: %b]",dataA,dataB,op,result, err);
+
+//Two numbers less than 250 Subtraction
+dataA=16'b0000000000111111; 
+dataB=16'b0000000000001111;
+op=4'b0011; //Subtraction Opcode 3
+
+#200;
+$display("[Input A: %d, Input B: %d] [Sub:%b] [Output: %d, Error: %b]",dataA,dataB,op,result, err);
+
+//Two numbers less than 250 Multiply
+dataA=16'b0000000000111111; 
+dataB=16'b0000000000001111;
+op=4'b0100; //Multiplication Opcode 4
+
+#200;
+$display("[Input A: %d, Input B: %d] [Mul:%b] [Output: %d, Error: %b]",dataA,dataB,op,result, err);
+
+//Two numbers less than 250 Divide
+dataA=16'b0000000000111111; 
+dataB=16'b0000000000001111;
+op=4'b0101; // Division Opcode 5
+
+#200;
+$display("[Input A: %d, Input B: %d] [Div:%b] [Output: %d, Error: %b]",dataA,dataB,op,result, err);
+
+//Two numbers less than 250 Modulo
+dataA=16'b0000000000111111; 
+dataB=16'b0000000000001111;
+op=4'b0110; //Modulus Opcode 6
+
+#200;
+$display("[Input A: %d, Input B: %d] [Mod:%b] [Output: %d, Error: %b]",dataA,dataB,op,result, err);
+
+//#######################################//
+
+//Two numbers greater than 16000 Addition
+dataA=16'b0111111111110000; 
+dataB=16'b0011111100000011;
+op=4'b0010; //Addition Opcode 2
+
+#200;
+$display("[Input A: %d, Input B: %d] [Add:%b] [Output: %d, Error: %b]",dataA,dataB,op,result, err);
+
+//Two numbers greater than 16000 Subtraction
+dataA=16'b0111111111110000; 
+dataB=16'b0011111100000011;
+op=4'b0011; //Subtraction Opcode 3
+
+#200;
+$display("[Input A: %d, Input B: %d] [Sub:%b] [Output: %d, Error: %b]",dataA,dataB,op,result, err);
+
+//Two numbers greater than 16000 Multiply
+dataA=16'b0111111111110000; 
+dataB=16'b0011111100000011;
+op=4'b0100; //Multiplication Opcode 4
+
+#200;
+$display("[Input A: %d, Input B: %d] [Mul:%b] [Output: %d, Error: %b]",dataA,dataB,op,result, err);
+
+//Two numbers greater than 16000 Divide
+dataA=16'b0111111111110000; 
+dataB=16'b0011111100000011;
+op=4'b0101; // Division Opcode 5
+
+#200;
+$display("[Input A: %d, Input B: %d] [Div:%b] [Output: %d, Error: %b]",dataA,dataB,op,result, err);
+
+//Two numbers greater than 16000 Modulo
+dataA=16'b0111111111110000; 
+dataB=16'b0011111100000011;
+op=4'b0110; //Modulus Opcode 6
+
+#200;
+$display("[Input A: %d, Input B: %d] [Mod:%b] [Output: %d, Error: %b]",dataA,dataB,op,result, err);
 
 
 end
