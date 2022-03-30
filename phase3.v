@@ -2,13 +2,15 @@
 // D Flip Flop
 //=============================================
 module DFF(clk,in,out);
-	input          clk;
+	input   clk;
 	input   in;
 	output  out;
 	reg     out;
 
 	always @(posedge clk)
-	out = in;
+	begin
+		out = in;
+	end
 endmodule
 
 //=============================================
@@ -21,8 +23,8 @@ module HalfAdder(A,B,carry,sum);
 	output sum;
 	reg carry;
 	reg sum;
-//---------------------------------------------	
-	always @(*) 
+//---------------------------------------------
+	always @(*)
 	  begin
 	    sum= A ^ B;
 	    carry= A & B;
@@ -42,7 +44,7 @@ module FullAdder(A,B,C,carry,sum);
 	output sum;
 	reg carry;
 	reg sum;
-//---------------------------------------------	
+//---------------------------------------------
 	wire c0;
 	wire s0;
 	wire c1;
@@ -51,15 +53,15 @@ module FullAdder(A,B,C,carry,sum);
 	HalfAdder ha1(A ,B,c0,s0);
 	HalfAdder ha2(s0,C,c1,s1);
 //---------------------------------------------
-	always @(*) 
+	always @(*)
 	  begin
-	    sum=s1; 
-		sum= A^B^C; 
-	    carry=c1|c0; 
-		carry= ((A^B)&C)|(A&B);  
+	    sum=s1;
+		sum= A^B^C;
+	    carry=c1|c0;
+		carry= ((A^B)&C)|(A&B);
 	  end
 //---------------------------------------------
-	
+
 endmodule
 
 //ADDITION OPCODE = 0010
@@ -75,9 +77,9 @@ module AddSub(inputA,inputB,mode,sum,overflow);
 
     wire b0,b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15; //XOR Interfaces
 	wire c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13,c14,c15,c16; //Carry Interfaces
-	
+
 	assign c0=mode;//Mode=0, Addition; Mode=1, Subtraction
-	
+
     assign b0 = inputB[0] ^ mode;//Flip the Bit if Subtraction
     assign b1 = inputB[1] ^ mode;//Flip the Bit if Subtraction
     assign b2 = inputB[2] ^ mode;//Flip the Bit if Subtraction
@@ -96,8 +98,8 @@ module AddSub(inputA,inputB,mode,sum,overflow);
 	assign b14 = inputB[14] ^ mode;
 	assign b15 = inputB[15] ^ mode;
 
-	
- 
+
+
 	FullAdder FA0(inputA[0],b0,  c0,c1,sum[0]);
 	FullAdder FA1(inputA[1],b1,  c1,c2,sum[1]);
 	FullAdder FA2(inputA[2],b2,  c2,c3,sum[2]);
@@ -122,11 +124,11 @@ module AddSub(inputA,inputB,mode,sum,overflow);
 	begin
 		//$display("%b %b %b",c15, c16, overflow);
 	end
- 
+
 endmodule
 
 module SixteenBitFullAdder(A,B,C,Carry,Sum);
-	
+
 	input [15:0] A;
 	input [15:0] B;
 	input C;
@@ -151,13 +153,13 @@ module SixteenBitFullAdder(A,B,C,Carry,Sum);
 	FullAdder FA13(A[13],B[13],Carry[12],Carry[13],Sum[13]);
 	FullAdder FA14(A[14],B[14],Carry[13],Carry[14],Sum[14]);
 	FullAdder FA15(A[15],B[15],Carry[14],Carry[15],Sum[15]);
-	
+
 endmodule
 
 module Dec4x16(binary,onehot);
 	input [3:0] binary;
 	output [15:0]onehot;
-	
+
 	assign onehot[ 0]=~binary[3]&~binary[2]&~binary[1]&~binary[0];
 	assign onehot[ 1]=~binary[3]&~binary[2]&~binary[1]& binary[0];
 	assign onehot[ 2]=~binary[3]&~binary[2]& binary[1]&~binary[0];
@@ -174,7 +176,7 @@ module Dec4x16(binary,onehot);
 	assign onehot[13]= binary[3]& binary[2]&~binary[1]& binary[0];
 	assign onehot[14]= binary[3]& binary[2]& binary[1]&~binary[0];
 	assign onehot[15]= binary[3]& binary[2]& binary[1]& binary[0];
-	
+
 endmodule
 
 //OPCODE = 0100
@@ -347,7 +349,7 @@ Addend14= { A[15]&B[15], A[15]&B[14], A[15]&B[13], A[15]&B[12], A[15]&B[11], A[1
 
 //$display("%b %b", C[2], C[1]);
 C[0]=  A[0]&B[0];//From Gates
-//=================================  
+//=================================
 C[1]=  Sum0[0];//From Adder0
 //=================================
 C[2]=  Sum1[0];//From Adder1
@@ -442,6 +444,117 @@ end
 
 endmodule
 
+//OPCODE 0111
+module And16(A, B, C)
+input [15:0] A;
+input [15:0] B;
+output[31:0] C;
+
+wire [15:0] A;
+wire [15:0] B;
+reg [31:0] C;
+
+always@(*)
+	begin
+		assign C = A & B;
+	end
+endmodule
+
+//OPCODE 1000
+module Nand16(A, B, C)
+input [15:0] A;
+input [15:0] B;
+output[31:0] C;
+
+wire [15:0] A;
+wire [15:0] B;
+reg [31:0] C;
+
+always@(*)
+	begin
+		assign C = ~(A & B)
+	end
+endmodule
+
+//OPCODE 1001
+module Nor16(A, B, C)
+input [15:0] A;
+input [15:0] B;
+output[15:0] C;
+
+wire [15:0] A;
+wire [15:0] B;
+reg [15:0] C;
+
+always@(*)
+	begin
+		assign C = ~(A | C)
+	end
+endmodule
+
+//OPCODE 1010
+module Not16(A, C)
+input [15:0] A;
+output[31:0] C;
+
+wire [15:0] A;
+reg [31:0] C;
+
+always@(*)
+	begin
+		assign C = ~A
+	end
+endmodule
+
+
+//OPCODE 1011
+module Or16(A, B, C)
+input [15:0] A;
+input [15:0] B;
+output[15:0] C;
+
+wire [15:0] A;
+wire [15:0] B;
+reg [15:0] C;
+
+always@(*)
+	begin
+		assign C = A | B;
+	end
+endmodule
+
+//OPCODE 1100
+module Xnor16(A, B, C)
+input [15:0] A;
+input [15:0] B;
+output[15:0] C;
+
+wire [15:0] A;
+wire [15:0] B;
+reg [15:0] C;
+
+always@(*)
+	begin
+		assign C = ~(A ^ B);
+	end
+endmodule
+
+//OPCODE 1101
+module Xor16(A, B, C)
+input [15:0] A;
+input [15:0] B;
+output[15:0] C;
+
+wire [15:0] A;
+wire [15:0] B;
+reg [15:0] C;
+
+always@(*)
+	begin
+		assign C = A ^ B;
+	end
+endmodule
+
 module StructMux(channels, select, b);
 input [15:0][31:0] channels;
 input      [15:0] select;
@@ -449,21 +562,21 @@ output      [31:0] b;
 
 
 	assign b = ({32{select[15]}} & channels[15]) | //PRESET
-               ({32{select[14]}} & channels[14]) |
-			   ({32{select[13]}} & channels[13]) | //XOR
-			   ({32{select[12]}} & channels[12]) | //XNOR
-			   ({32{select[11]}} & channels[11]) | //OR
-			   ({32{select[10]}} & channels[10]) | //NOT
-			   ({32{select[ 9]}} & channels[ 9]) | //NOR
-			   ({32{select[ 8]}} & channels[ 8]) | //NAND
-			   ({32{select[ 7]}} & channels[ 7]) | //AND
-			   ({32{select[ 6]}} & channels[ 6]) | //MOD
-			   ({32{select[ 5]}} & channels[ 5]) | //DIVIDE
-			   ({32{select[ 4]}} & channels[ 4]) | //MULTIPLY
-			   ({32{select[ 3]}} & channels[ 3]) | //SUBTRACT
-			   ({32{select[ 2]}} & channels[ 2]) | //ADD
-               ({32{select[ 1]}} & channels[ 1]) | //RESET
-               ({32{select[ 0]}} & channels[ 0]) ; //NO-OP
+             ({32{select[14]}} & channels[14]) |
+					   ({32{select[13]}} & channels[13]) | //XOR
+					   ({32{select[12]}} & channels[12]) | //XNOR
+					   ({32{select[11]}} & channels[11]) | //OR
+					   ({32{select[10]}} & channels[10]) | //NOT
+					   ({32{select[ 9]}} & channels[ 9]) | //NOR
+					   ({32{select[ 8]}} & channels[ 8]) | //NAND
+					   ({32{select[ 7]}} & channels[ 7]) | //AND
+					   ({32{select[ 6]}} & channels[ 6]) | //MOD
+					   ({32{select[ 5]}} & channels[ 5]) | //DIVIDE
+					   ({32{select[ 4]}} & channels[ 4]) | //MULTIPLY
+					   ({32{select[ 3]}} & channels[ 3]) | //SUBTRACT
+					   ({32{select[ 2]}} & channels[ 2]) | //ADD
+		         ({32{select[ 1]}} & channels[ 1]) | //RESET
+		         ({32{select[ 0]}} & channels[ 0]) ; //NO-OP
 
 endmodule
 
@@ -484,10 +597,21 @@ wire [15:0][31:0] channels;
 wire [15:0] select;
 wire [31:0] b;
 
+//Arithmetic Results
 wire[15:0] outputADD;
 wire[31:0] outputMULT;
 wire[15:0] outputDIV;
 wire[15:0] outputMOD;
+
+//Logic Results
+wire[15:0] outputAND;
+wire[15:0] outputNAND;
+wire[15:0] outputNOR;
+wire[15:0] outputNOT;
+wire[15:0] outputOR;
+wire[15:0] outputXNOR;
+wire[15:0] outputXOR;
+
 wire addError;
 wire divError;
 
@@ -506,6 +630,15 @@ Multiplier mult(A, B, outputMULT);
 Divider div(A, B, outputDIV, divError);
 Modder mod(A, B, outputMOD, divError);
 
+And16 ander(A, B, outputAND);
+Nand16 nander(A, B, outputNAND);
+Nor16 norer(A, B, outputNOR);
+Not16 noter(A, B, outputNOT);
+Or16 orer(A, B, outputOR);
+Xor16 xorer(A, B, outputXOR);
+Xnor16 xnorer(A, B, outputXNOR);
+
+//Register
 DFF ACC1 [31:0] (clk, next, cur);
 
 
@@ -516,13 +649,13 @@ assign channels[ 3]={16'b0000,outputADD};
 assign channels[ 4]=outputMULT;
 assign channels[ 5]={16'b0000,outputDIV};
 assign channels[ 6]={16'b0000,outputMOD};
-assign channels[ 7]={16'b0000,unknown}; //AND
-assign channels[ 8]={16'b0000,unknown}; //NAND
-assign channels[ 9]={16'b0000,unknown}; //NOR
-assign channels[10]={16'b0000,unknown}; //NOT
-assign channels[11]={16'b0000,unknown}; //OR
-assign channels[12]={16'b0000,unknown}; //XNOR
-assign channels[13]={16'b0000,unknown}; //XOR
+assign channels[ 7]={16'b0000,outputAND}; //AND
+assign channels[ 8]={16'b0000,outputNAND}; //NAND
+assign channels[ 9]={16'b0000,outputOR}; //NOR
+assign channels[10]={16'b0000,outputNOT}; //NOT
+assign channels[11]={16'b0000,outputOR}; //OR
+assign channels[12]={16'b0000,xnorer}; //XNOR
+assign channels[13]={16'b0000,xorer}; //XOR
 assign channels[14]={16'b0000,unknown};
 assign channels[15]={32'b1}; //PRESET
 
@@ -533,7 +666,7 @@ begin
 	regB= cur[15:0]; //to get the lower two bytes...
 	//high bytes=cur[31:16]
 	//low bytes=cur[15:0]
-	
+
 	if (opcode==4'b1)
 	begin
 		error=0;
@@ -585,15 +718,15 @@ module testbench();
     initial begin //Start Output Thread
 	forever
          begin
- 
-		 
+
+
 		 case (opcode)
 		 0: $display("%16b ==> %32b         , NO-OP",bb8.cur,bb8.b);
 		 1: $display("%16b ==> %32b         , RESET",16'b0000,bb8.b);
 		 5: $display("%16b  +  %16b = %16b  , ADD"  ,bb8.cur,inputA,bb8.b);
 		 9: $display("%16b AND %16b = %16b  , AND"  ,bb8.cur,inputA,bb8.b);
 		 endcase
-		 
+
 		 #10;
 		 end
 	end
