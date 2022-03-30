@@ -445,39 +445,7 @@ end
 endmodule
 
 //OPCODE 0111
-module And16(A, B, C)
-input [15:0] A;
-input [15:0] B;
-output[31:0] C;
-
-wire [15:0] A;
-wire [15:0] B;
-reg [31:0] C;
-
-always@(*)
-	begin
-		assign C = A & B;
-	end
-endmodule
-
-//OPCODE 1000
-module Nand16(A, B, C)
-input [15:0] A;
-input [15:0] B;
-output[31:0] C;
-
-wire [15:0] A;
-wire [15:0] B;
-reg [31:0] C;
-
-always@(*)
-	begin
-		assign C = ~(A & B)
-	end
-endmodule
-
-//OPCODE 1001
-module Nor16(A, B, C)
+module And16(A, B, C);
 input [15:0] A;
 input [15:0] B;
 output[15:0] C;
@@ -488,27 +456,59 @@ reg [15:0] C;
 
 always@(*)
 	begin
-		assign C = ~(A | C)
+		assign C = A & B;
+	end
+endmodule
+
+//OPCODE 1000
+module Nand16(A, B, C);
+input [15:0] A;
+input [15:0] B;
+output[15:0] C;
+
+wire [15:0] A;
+wire [15:0] B;
+reg [15:0] C;
+
+always@(*)
+	begin
+		assign C = ~(A & B);
+	end
+endmodule
+
+//OPCODE 1001
+module Nor16(A, B, C);
+input [15:0] A;
+input [15:0] B;
+output[15:0] C;
+
+wire [15:0] A;
+wire [15:0] B;
+reg [15:0] C;
+
+always@(*)
+	begin
+		assign C = ~(A | C);
 	end
 endmodule
 
 //OPCODE 1010
-module Not16(A, C)
+module Not16(A, C);
 input [15:0] A;
-output[31:0] C;
+output[15:0] C;
 
 wire [15:0] A;
-reg [31:0] C;
+reg [15:0] C;
 
 always@(*)
 	begin
-		assign C = ~A
+		assign C = ~A;
 	end
 endmodule
 
 
 //OPCODE 1011
-module Or16(A, B, C)
+module Or16(A, B, C);
 input [15:0] A;
 input [15:0] B;
 output[15:0] C;
@@ -524,7 +524,7 @@ always@(*)
 endmodule
 
 //OPCODE 1100
-module Xnor16(A, B, C)
+module Xnor16(A, B, C);
 input [15:0] A;
 input [15:0] B;
 output[15:0] C;
@@ -540,7 +540,7 @@ always@(*)
 endmodule
 
 //OPCODE 1101
-module Xor16(A, B, C)
+module Xor16(A, B, C);
 input [15:0] A;
 input [15:0] B;
 output[15:0] C;
@@ -625,18 +625,18 @@ wire [31:0] cur;
 
 Dec4x16 dec1(opcode, select);
 StructMux mux1(channels, select, b);
-AddSub adder(A, B, opcode[0], outputADD, addError);
-Multiplier mult(A, B, outputMULT);
-Divider div(A, B, outputDIV, divError);
-Modder mod(A, B, outputMOD, divError);
+AddSub adder(regA, regB, opcode[0], outputADD, addError);
+Multiplier mult(regA, regB, outputMULT);
+Divider div(regA, regB, outputDIV, divError);
+Modder mod(regA, regB, outputMOD, divError);
 
-And16 ander(A, B, outputAND);
-Nand16 nander(A, B, outputNAND);
-Nor16 norer(A, B, outputNOR);
-Not16 noter(A, B, outputNOT);
-Or16 orer(A, B, outputOR);
-Xor16 xorer(A, B, outputXOR);
-Xnor16 xnorer(A, B, outputXNOR);
+And16 ander(regA, regB, outputAND);
+Nand16 nander(regA, regB, outputNAND);
+Nor16 norer(regA, regB, outputNOR);
+Not16 noter(regA, outputNOT);
+Or16 orer(regA, regB, outputOR);
+Xor16 xorer(regA, regB, outputXOR);
+Xnor16 xnorer(regA, regB, outputXNOR);
 
 //Register
 DFF ACC1 [31:0] (clk, next, cur);
@@ -651,11 +651,11 @@ assign channels[ 5]={16'b0000,outputDIV};
 assign channels[ 6]={16'b0000,outputMOD};
 assign channels[ 7]={16'b0000,outputAND}; //AND
 assign channels[ 8]={16'b0000,outputNAND}; //NAND
-assign channels[ 9]={16'b0000,outputOR}; //NOR
+assign channels[ 9]={16'b0000,outputNOR}; //NOR
 assign channels[10]={16'b0000,outputNOT}; //NOT
 assign channels[11]={16'b0000,outputOR}; //OR
-assign channels[12]={16'b0000,xnorer}; //XNOR
-assign channels[13]={16'b0000,xorer}; //XOR
+assign channels[12]={16'b0000,outputXNOR}; //XNOR
+assign channels[13]={16'b0000,outputXOR}; //XOR
 assign channels[14]={16'b0000,unknown};
 assign channels[15]={32'b1}; //PRESET
 
@@ -683,7 +683,7 @@ module testbench();
 	reg clk;
 
 	//Data Inputs
-	reg [15:0]dataA;
+	reg [15:0]inputA;
 	reg [15:0]dataB;
 	reg [3:0]op;
 	wire [1:0]err;
@@ -694,7 +694,7 @@ module testbench();
 
 
 	//Instantiate the Modules
-	breadboard m (clk, dataA, dataB, result, op, err);
+	breadboard board (clk, inputA, result, op, err);
 
 
 //=================================================
@@ -720,11 +720,22 @@ module testbench();
          begin
 
 
-		 case (opcode)
-		 0: $display("%16b ==> %32b         , NO-OP",bb8.cur,bb8.b);
-		 1: $display("%16b ==> %32b         , RESET",16'b0000,bb8.b);
-		 5: $display("%16b  +  %16b = %16b  , ADD"  ,bb8.cur,inputA,bb8.b);
-		 9: $display("%16b AND %16b = %16b  , AND"  ,bb8.cur,inputA,bb8.b);
+		 case (op)
+		 0: $display("%16b ==> %32b         , NO-OP",board.cur,board.b);
+		 1: $display("%16b ==> %32b         , RESET",16'b0000,board.b);
+		 2: $display("%16b  +  %16b = %16b  , ADD"  ,board.cur,inputA,board.b);
+		 3: $display("%16b  -  %16b = %16b  , SUB"  ,board.cur,inputA,board.b);
+		 4: $display("%16b  *  %16b = %16b  , MUL"  ,board.cur,inputA,board.b);
+		 5: $display("%16b  /  %16b = %16b  , DIV"  ,board.cur,inputA,board.b);
+		 6: $display("%16b  %  %16b = %16b  , MOD"  ,board.cur,inputA,board.b);
+		 7: $display("%16b AND %16b = %16b  , AND"  ,board.cur,inputA,board.b);
+		 9: $display("%16b OR  %16b = %16b  , OR"   ,board.cur,inputA,board.b);
+		 10: $display("%16b NOT %16b = %16b , NOT" ,board.cur,inputA,board.b);
+		 13: $display("%16b XOR %16b = %16b , XOR" ,board.cur,inputA,board.b);
+		 12: $display("%16b XNOR %16b = %16b , XNOR"  ,board.cur,inputA,board.b);
+		 8: $display("%16b  NAND %16b = %16b  , NAND"  ,board.cur,inputA,board.b);
+		 9: $display("%16b  NOR  %16b = %16b  , NOR"  ,board.cur,inputA,board.b);
+		 15: $display("%16b PRESET %16b = %16b  , PRESET"  ,board.cur,inputA,board.b);
 		 endcase
 
 		 #10;
@@ -737,7 +748,22 @@ module testbench();
 initial begin
 #6;
 inputA=16'b0000000000000000;
+op=4'b0001; //Reset Opcode 1
+#10;
+inputA=16'b0000000000000111;
+op=4'b0010; //Add Opcode 2
+inputA=16'b0000000000000111;
+op=4'b0010; //Add Opcode 2
+inputA=16'b0000000000000111;
+op=4'b0010; //Add Opcode 2
+inputA=16'b0000000000000111;
+op=4'b0010; //Add Opcode 2
+inputA=16'b0000000000000111;
+op=4'b0010; //Add Opcode 2
+#10;
+#10; 
+#10;
 
-
+$finish;
 end
 endmodule
