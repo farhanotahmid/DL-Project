@@ -502,7 +502,7 @@ reg [15:0] C;
 
 always@(*)
 	begin
-		assign C = ~B;
+		assign C =~ B;
 	end
 endmodule
 
@@ -633,7 +633,7 @@ Modder mod(regA, regB, outputMOD, divError);
 And16 ander(regA, regB, outputAND);
 Nand16 nander(regA, regB, outputNAND);
 Nor16 norer(regA, regB, outputNOR);
-Not16 noter(regA, outputNOT);
+Not16 noter(regB, outputNOT);
 Or16 orer(regA, regB, outputOR);
 Xor16 xorer(regA, regB, outputXOR);
 Xnor16 xnorer(regA, regB, outputXNOR);
@@ -727,7 +727,7 @@ module testbench();
 		 3: $display("%16b  -  %16b = %16b  , SUB"  ,inputA,board.cur,board.b);
 		 4: $display("%16b  *  %16b = %16b  , MUL"  ,inputA,board.cur,board.b);
 		 5: $display("%16b  /  %16b = %16b  , DIV"  ,inputA,board.cur,board.b);
-		 6: $display("%16b  %  %16b = %16b  , MOD"  ,inputA,board.cur,board.b);
+		 6: $display("%16b  mod  %16b = %16b  , MOD"  ,inputA,board.cur,board.b);
 		 7: $display("%16b AND %16b = %16b  , AND"  ,inputA,board.cur,board.b);
 		 8: $display("%16b  NAND %16b = %16b  , NAND"  ,inputA,board.cur,board.b);
 		 9: $display("%16b  NOR  %16b = %16b  , NOR"  ,inputA,board.cur,board.b);
@@ -802,6 +802,17 @@ initial begin
 	op=4'b1100;//XNOR
 	#10;
 	//---------------------------------	
+	inputA=16'b1111111111111111;
+	op=4'b1000;//NAND
+	#10;
+	//---------------------------------	
+	inputA=16'b1111111111111111;
+	op=4'b1001;//NOR
+	#10;
+	//---------------------------------	
+	inputA=16'b0000000000000000;
+	op=4'b1111;//PRESET
+	#10;
 	
 //1100
 
