@@ -535,7 +535,7 @@ reg [15:0] C;
 
 always@(*)
 	begin
-		assign C = ~(B ^ A);
+		assign C = ~(A ^ B);
 	end
 endmodule
 
@@ -721,21 +721,21 @@ module testbench();
 
 
 		 case (op)
-		 0: $display("%16b ==> %32b         , NO-OP",board.cur,board.b);
-		 1: $display("%16b ==> %32b         , RESET",16'b0000,board.b);
-		 2: $display("%16b  +  %16b = %16b  , ADD"  ,inputA,board.cur,board.b);
-		 3: $display("%16b  -  %16b = %16b  , SUB"  ,inputA,board.cur,board.b);
-		 4: $display("%16b  *  %16b = %16b  , MUL"  ,inputA,board.cur,board.b);
-		 5: $display("%16b  /  %16b = %16b  , DIV"  ,inputA,board.cur,board.b);
-		 6: $display("%16b  mod  %16b = %16b  , MOD"  ,inputA,board.cur,board.b);
-		 7: $display("%16b AND %16b = %16b  , AND"  ,inputA,board.cur,board.b);
-		 8: $display("%16b  NAND %16b = %16b  , NAND"  ,inputA,board.cur,board.b);
-		 9: $display("%16b  NOR  %16b = %16b  , NOR"  ,inputA,board.cur,board.b);
-		 10: $display("%16b NOT %16b = %16b , NOT" ,inputA,board.cur,board.b);
-		 11: $display("%16b OR  %16b = %16b  , OR"   ,inputA,board.cur,board.b);
-		 12: $display("%16b XNOR %16b = %16b , XNOR"  ,inputA,board.cur,board.b);
-		 13: $display("%16b XOR %16b = %16b , XOR" ,inputA,board.cur,board.b);
-		 15: $display("%16b PRESET %16b = %16b  , PRESET"  ,inputA,board.cur,board.b);
+		 0: $display("%16b ==> %32b         , NO-OP, err:%2b",board.cur,board.b, err);
+		 1: $display("%16b ==> %32b         , RESET, err:%2b",16'b0000,board.b, err);
+		 2: $display("%16b  +  %16b = %16b  , ADD, err:%2b"  ,inputA,board.cur,board.b, err);
+		 3: $display("%16b  -  %16b = %16b  , SUB, err:%2b"  ,inputA,board.cur,board.b, err);
+		 4: $display("%16b  *  %16b = %16b  , MUL, err:%2b"  ,inputA,board.cur,board.b, err);
+		 5: $display("%16b  /  %16b = %16b  , DIV, err:%2b"  ,inputA,board.cur,board.b, err);
+		 6: $display("%16b  mod  %16b = %16b  , MOD, err:%2b"  ,inputA,board.cur,board.b, err);
+		 7: $display("%16b AND %16b = %16b  , AND, err:%2b"  ,inputA,board.cur,board.b, err);
+		 8: $display("%16b  NAND %16b = %16b  , NAND, err:%2b"  ,inputA,board.cur,board.b, err);
+		 9: $display("%16b  NOR  %16b = %16b  , NOR, err:%2b"  ,inputA,board.cur,board.b, err);
+		 10: $display("%16b NOT %16b = %16b , NOT, err:%2b" ,inputA,board.cur,board.b, err);
+		 11: $display("%16b OR  %16b = %16b  , OR, err:%2b"   ,inputA,board.cur,board.b, err);
+		 12: $display("%16b XNOR %16b = %16b , XNOR, err:%2b"  ,inputA,board.cur,board.b, err);
+		 13: $display("%16b XOR %16b = %16b , XOR, err:%2b" ,inputA,board.cur,board.b, err);
+		 15: $display("%16b PRESET %16b = %16b  , PRESET, err:%2b"  ,inputA,board.cur,board.b, err);
 		 
 		 endcase
 
