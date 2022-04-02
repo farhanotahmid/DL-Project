@@ -642,7 +642,7 @@ Xnor16 xnorer(regA, regB, outputXNOR);
 DFF ACC1 [31:0] (clk, next, cur);
 
 
-assign channels[ 0]=cur; //NO-OP
+assign channels[ 0]=regB; //NO-OP
 assign channels[ 1]={32'b0}; //RESET
 assign channels[ 2]={16'b0000,outputADD};
 assign channels[ 3]={16'b0000,outputADD};
@@ -721,21 +721,21 @@ module testbench();
 
 
 		 case (op)
-		 0: $display("%16b ==> %32b         , NO-OP, err:%2b",board.cur,board.b, err);
-		 1: $display("%16b ==> %32b         , RESET, err:%2b",16'b0000,board.b, err);
-		 2: $display("%16b  +  %16b = %16b  , ADD, err:%2b"  ,inputA,board.cur,board.b, err);
-		 3: $display("%16b  -  %16b = %16b  , SUB, err:%2b"  ,inputA,board.cur,board.b, err);
-		 4: $display("%16b  *  %16b = %16b  , MUL, err:%2b"  ,inputA,board.cur,board.b, err);
-		 5: $display("%16b  /  %16b = %16b  , DIV, err:%2b"  ,inputA,board.cur,board.b, err);
-		 6: $display("%16b  mod  %16b = %16b  , MOD, err:%2b"  ,inputA,board.cur,board.b, err);
-		 7: $display("%16b AND %16b = %16b  , AND, err:%2b"  ,inputA,board.cur,board.b, err);
-		 8: $display("%16b  NAND %16b = %16b  , NAND, err:%2b"  ,inputA,board.cur,board.b, err);
-		 9: $display("%16b  NOR  %16b = %16b  , NOR, err:%2b"  ,inputA,board.cur,board.b, err);
-		 10: $display("%16b NOT %16b = %16b , NOT, err:%2b" ,inputA,board.cur,board.b, err);
-		 11: $display("%16b OR  %16b = %16b  , OR, err:%2b"   ,inputA,board.cur,board.b, err);
-		 12: $display("%16b XNOR %16b = %16b , XNOR, err:%2b"  ,inputA,board.cur,board.b, err);
-		 13: $display("%16b XOR %16b = %16b , XOR, err:%2b" ,inputA,board.cur,board.b, err);
-		 15: $display("%16b PRESET %16b = %16b  , PRESET, err:%2b"  ,inputA,board.cur,board.b, err);
+		 0: $display("Input:%16b Feedback:%16b NO-OP Opcode:%4b Output:%32b Err:%2b",inputA, board.regB, op, board.b, err);
+		 1: $display("Input:%16b Feedback:%16b RESET Opcode:%4b Output %32b Err:%2b",16'b0000,board.regB, op, board.b, err);
+		 2: $display("Input:%16b Feedback:%16b ADD Opcode:%4b Output:%32b Err:%2b",inputA, board.regB, op, board.b, err);
+		 3: $display("Input:%16b Feedback:%16b SUB Opcode:%4b Output:%32b Err:%2b",inputA, board.regB, op, board.b, err);
+		 4: $display("Input:%16b Feedback:%16b MUL Opcode:%4b Output:%32b Err:%2b",inputA, board.regB, op, board.b, err);
+		 5: $display("Input:%16b Feedback:%16b DIV Opcode:%4b Output:%32b Err:%2b",inputA, board.regB, op, board.b, err);
+		 6: $display("Input:%16b Feedback:%16b MOD Opcode:%4b Output:%32b Err:%2b",inputA, board.regB, op, board.b, err);
+		 7: $display("Input:%16b Feedback:%16b AND Opcode:%4b Output:%32b Err:%2b",inputA, board.regB, op, board.b, err);
+		 8: $display("Input:%16b Feedback:%16b NAND Opcode:%4b Output:%32b Err:%2b",inputA, board.regB, op, board.b, err);
+		 9: $display("Input:%16b Feedback:%16b NOR Opcode:%4b Output:%32b Err:%2b",inputA, board.regB, op, board.b, err);
+		 10: $display("Input:%16b Feedback:%16b NOT Opcode:%4b Output:%32b Err:%2b",inputA, board.regB, op, board.b, err);
+		 11: $display("Input:%16b Feedback:%16b OR Opcode:%4b Output:%32b Err:%2b",inputA, board.regB, op, board.b, err);
+		 12: $display("Input:%16b Feedback:%16b XNOR Opcode:%4b Output:%32b Err:%2b",inputA, board.regB, op, board.b, err);
+		 13: $display("Input:%16b Feedback:%16b XOR Opcode:%4b Output:%32b Err:%2b",inputA, board.regB, op, board.b, err);
+		 15: $display("Input:%16b Feedback:%16b PRESET Opcode:%4b Output:%32b Err:%2b",inputA, board.regB, op, board.b, err);
 		 
 		 endcase
 
