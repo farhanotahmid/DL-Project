@@ -647,19 +647,17 @@ initial begin
 	inputA=16'b0000000000000000;
 	op=4'b0000;//NO-OP
 	#10;
-	$display("result: %2d", result);
 	//---------------------------------
 	//Add 221
 	inputA=16'b0000000011011101;
 	op=4'b0010;
 	#10;
-
+	$display("result: %2d", result);
 	//---------------------------------
 	//NO-OP
 	inputA=16'b0000000000000000;
 	op=4'b0000;
 	#10;
-	$display("result: %2d", result);
 	//---------------------------------
 	//Multiply by 221/ square
 	inputA=16'b0000000011011101;
@@ -671,7 +669,6 @@ initial begin
 	inputA=16'b0000000000000000;
 	op=4'b0000;
 	#10;
-	$display("result: %2d", result);
 	//---------------------------------
 	//Multiply by 57
 	inputA=16'b0000000000111001;
@@ -684,7 +681,6 @@ initial begin
 	op=4'b0000;
 	#10;
 	hold = result;
-	$display("result: %2d", result);
 	//---------------------------------
 	//Divide by 30
 	inputA=16'b0000000000011110;
@@ -695,9 +691,8 @@ initial begin
 	//---------------------------------
 	//NO-OP
 	inputA=16'b0000000000000000;
-	op=4'b1010;//NOT
+	op=4'b0000;
 	#10;
-	$display("result: %2d", result);
 	//---------------------------------
 	//Reset
 	inputA = 16'b0000000000000000;
@@ -707,9 +702,8 @@ initial begin
 	//---------------------------------
 	//NO-OP
 	inputA=16'b0000000000000000;
-	op=4'b1010;//NOT
+	op=4'b0000;//NOT
 	#10;
-	$display("result: %2d", result);
 	//---------------------------------
 	//Add hold var
 	inputA = hold;
@@ -734,7 +728,7 @@ initial begin
 	inputA=16'b0000000000000000;
 	op=4'b1010;//NOT
 	#10;
-	$display("Circumference of a circle with height 5.7 and side length 22.1 is %3d.%-2d.\n\n\n\n",whole,fraction);
+	$display("height 5.7 and side length 22.1 is %3d.%-2d.\n\n\n\n",whole,fraction);
 	//dfgihuwefpoihsfd
 	//
 	//
