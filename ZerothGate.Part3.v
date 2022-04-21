@@ -185,7 +185,7 @@ input  [15:0] A;
 input  [15:0] B;
 output [31:0] C;
 
-reg [31:0] C;
+wire [31:0] C;
 // TO TEAM: Algorithm used: https://en.wikipedia.org/wiki/Binary_multiplier#Unsigned_integers PLEASE CHECK IF YOU DONT UNDERSTAND
 //Local Variables
 wire [15:0] p0 = {16{A[0]}} & B;
@@ -209,7 +209,7 @@ wire [15:0][31:0] sums;
 wire [15:0] carrys;
 
 
-SixteenBitFullAdder add0({1'b0,p0[15:1]}, 			p1,	1'b0,	carrys[0], 		sums[0]);
+SixteenBitFullAdder add0({1'b0,p0[15:1]}, 		p1,	1'b0,	carrys[0], 		sums[0]);
 SixteenBitFullAdder add1({1'b0,sums[0][15:1]},	p2,	1'b0,	carrys[1],  	sums[1]);
 SixteenBitFullAdder add2({1'b0,sums[1][15:1]},	p3,	1'b0,	carrys[2],  	sums[2]);
 SixteenBitFullAdder add3({1'b0,sums[2][15:1]},	p4,	1'b0,	carrys[3],  	sums[3]);
@@ -228,47 +228,43 @@ SixteenBitFullAdder add12({1'b0,sums[11][15:1]},p13,1'b0,	carrys[12],  	sums[12]
 SixteenBitFullAdder add13({1'b0,sums[12][15:1]},p14,1'b0,	carrys[13],  	sums[13]);
 SixteenBitFullAdder add14({1'b0,sums[13][15:1]},p15,1'b0,	carrys[14],  	sums[14]);
 
-
-always@(*)
-begin
 //$display("%b %b", C[2], C[1]);
-C[0]=  p0[0];
+assign C[0]=  p0[0];
 //=================================
-C[1]=  sums[0][0];
+assign C[1]=  sums[0][0];
 //=================================
-C[2]=  sums[1][0];//From Adder1
+assign C[2]=  sums[1][0];//From Adder1
 //=================================
-C[3] = sums[2][0];
-C[4] = sums[3][0];
-C[5] = sums[4][0];
-C[6] = sums[5][0];
-C[7] = sums[6][0];
-C[8] = sums[7][0];
-C[9] = sums[8][0];
-C[10] = sums[9][0];
-C[11] = sums[10][0];
-C[12] = sums[11][0];
-C[13] = sums[12][0];
-C[14] = sums[13][0];
+assign C[3] = sums[2][0];
+assign C[4] = sums[3][0];
+assign C[5] = sums[4][0];
+assign C[6] = sums[5][0];
+assign C[7] = sums[6][0];
+assign C[8] = sums[7][0];
+assign C[9] = sums[8][0];
+assign C[10] = sums[9][0];
+assign C[11] = sums[10][0];
+assign C[12] = sums[11][0];
+assign C[13] = sums[12][0];
+assign C[14] = sums[13][0];
 //---------------------------------
-C[15] = sums[14][0];
-C[16] = sums[14][1];
-C[17] = sums[14][2];
-C[18] = sums[14][3];
-C[19] = sums[14][4];
-C[20] = sums[14][5];
-C[21] = sums[14][6];
-C[22] = sums[14][7];
-C[23] = sums[14][8];
-C[24] = sums[14][9];
-C[25] = sums[14][10];
-C[26] = sums[14][11];
-C[27] = sums[14][12];
-C[28] = sums[14][13];
-C[29] = sums[14][14];
-C[30] = sums[14][15];
-C[31] = sums[14][16];
-end
+assign C[15] = sums[14][0];
+assign C[16] = sums[14][1];
+assign C[17] = sums[14][2];
+assign C[18] = sums[14][3];
+assign C[19] = sums[14][4];
+assign C[20] = sums[14][5];
+assign C[21] = sums[14][6];
+assign C[22] = sums[14][7];
+assign C[23] = sums[14][8];
+assign C[24] = sums[14][9];
+assign C[25] = sums[14][10];
+assign C[26] = sums[14][11];
+assign C[27] = sums[14][12];
+assign C[28] = sums[14][13];
+assign C[29] = sums[14][14];
+assign C[30] = sums[14][15];
+assign C[31] = sums[14][16];
 endmodule
 
 //OPCODE = 0101
@@ -575,6 +571,9 @@ module testbench();
 	//Outputs
 	wire[31:0]result;
 
+	reg [31:0] fraction;
+	reg [31:0] whole;
+	reg [31:0] hold;
 
 
 	//Instantiate the Modules
@@ -620,7 +619,7 @@ module testbench();
 		 12: $display("Input:%16b Feedback:%16b XNOR Opcode:%4b Output:%32b Err:%2b",inputA, board.regB, op, board.b, err);
 		 13: $display("Input:%16b Feedback:%16b XOR Opcode:%4b Output:%32b Err:%2b",inputA, board.regB, op, board.b, err);
 		 15: $display("Input:%16b Feedback:%16b PRESET Opcode:%4b Output:%32b Err:%2b",inputA, board.regB, op, board.b, err);
-		 
+
 		 endcase
 
 		 #10;
@@ -636,7 +635,7 @@ initial begin
 //STIMULOUS Thread
 //=================================================
 
-	#6;	
+	#6;
 	$display("Volume of a square pyramid: a^2 * (h/3)");
 	//RESET
 	inputA=16'b0000000000000000;
@@ -735,11 +734,53 @@ initial begin
 	inputA=16'b0000000000000000;
 	op=4'b1010;//NOT
 	#10;
-	$display("Circumference of a circle with height 5.7 and side length 22.1 is %3d.%-2d.",whole,fraction);
-	
+	$display("Circumference of a circle with height 5.7 and side length 22.1 is %3d.%-2d.\n\n\n\n",whole,fraction);
+	//dfgihuwefpoihsfd
+	//
+	//
+	//
+	//
+	inputA=16'b0000000000000000;
+	op=4'b0001;
+	#10;
+	$display("result: %2d", result);
+	//---------------------------------
+	//NO-OP
+	inputA=16'b0000000000000000;
+	op=4'b0000;//NO-OP
+	#10;
+	$display("result: %2d", result);
+	//---------------------------------
+	//Add 2
+	inputA=16'd2;
+	op=4'b0010;
+	#10;
+	//NO-OP
+	inputA=16'b0000000000000000;
+	op=4'b0000;//NO-OP
+	#10;
+	$display("result: %2d", result);
+	//Multiply by 57
+	inputA=16'b0000000000000010;
+	op=4'b0100;
+	#10;
+	//NO-OP
+	inputA=16'b0000000000000000;
+	op=4'b0000;//NO-OP
+	#10;
+	$display("result: %2d", result);
+	//Add 2
+	inputA=16'd1;
+	op=4'b0010;
+	#10;
+	//NO-OP
+	inputA=16'b0000000000000000;
+	op=4'b0000;//NO-OP
+	#10;
+
 //1100
 
 	$finish;
-	
+
 end
 endmodule
