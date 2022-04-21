@@ -642,7 +642,6 @@ initial begin
 	inputA=16'b0000000000000000;
 	op=4'b0001;
 	#10;
-	$display("result: %2d", result);
 	//---------------------------------
 	//NO-OP
 	inputA=16'b0000000000000000;
@@ -653,7 +652,6 @@ initial begin
 	inputA=16'b0000000000010101;
 	op=4'b0010;
 	#10;
-	$display("result: %2d", result);
 	//---------------------------------
 	//NO-OP
 	inputA=16'b0000000000000000;
@@ -664,7 +662,6 @@ initial begin
 	inputA=16'b0000000000010101;
 	op=4'b0100;
 	#10;
-	$display("result: %d or %b", result, result);
 	//---------------------------------
 	//NO-OP
 	inputA=16'b0000000000000000;
@@ -675,33 +672,40 @@ initial begin
 	inputA=16'b0000000000111001;
 	op=4'b0100;
 	#10;
-	$display("Tested up to here.");
 	//---------------------------------
 	//NO-OP
 	inputA=16'b0000000000000000;
 	op=4'b0000;
 	#10;
-	hold = result;
-	//---------------------------------
-	//Divide by 30
-	inputA=16'b0000000000011110;
+	//Divide by 3
+	inputA=16'b0000000000000011;
 	op=4'b0101;
 	#10;
-
-	$display("whole: %b, %d", whole, whole);
 	//---------------------------------
 	//NO-OP
 	inputA=16'b0000000000000000;
 	op=4'b0000;
-	whole = result;
+	hold = result;
 	#10;
+	//---------------------------------
+	//Divide by 100 (Since we squared)
+	//inputA=16'b0010011100010000
+	inputA=16'b0000000001100100;
+	op=4'b0101;
+	#5
+	whole = result;
+	#5;
+	//---------------------------------
+	//NO-OP
+	inputA=16'b0000000000000000;
+	op=4'b0000;
+	#10;
+	$display("Tested up to here., %d", whole);
 	//---------------------------------
 	//Reset
 	inputA = 16'b0000000000000000;
 	op = 4'b0001;
 	#10;
-	$display("result: %2d", result);
-	$display("whole: %b, %d", whole, whole);
 	//---------------------------------
 	//NO-OP
 	inputA=16'b0000000000000000;
@@ -712,30 +716,24 @@ initial begin
 	inputA = hold;
 	op = 4'b0010;
 	#10;
-	$display("result: %2d", result);
-	$display("whole: %b, %d", whole, whole);
 	//---------------------------------
 	//NO-OP
 	inputA=16'b0000000000000000;
 	op=4'b0000;
 	#10;
-	$display("result: %2d", result);
 	//---------------------------------
-	//Mod by 30
-	inputA = 16'b0000000000011110;
+	//Mod by 10
+	inputA = 16'b0000000000001010;
 	op = 4'b0110;
-	#10;
+	#5;
 	fraction = result;
-	$display("result: %2d", result);
-	$display("whole: %b, %d", whole, whole);
+	#5;
 	//---------------------------------
 	//NO-OP
 	inputA=16'b0000000000000000;
 	op=4'b0000;
 	#10;
 	$display("height 5.7 and side length 22.1 is %3d.%-2d.\n\n\n\n",whole,fraction);
-	$display("whole: %b, %d", whole, whole);
-	$display("fraction: %b, %d", fraction, fraction);
 
 
 	//Cleanup
