@@ -633,11 +633,13 @@ module testbench();
 initial begin
 
 //=================================================
-//STIMULOUS Thread
+//STIMULUS Thread
 //=================================================
 
 	#6;
-	$display("Volume of a square pyramid: a^2 * (h/3)");
+	///////////////////////////////////////////////////////////////////////////////
+	//Adem
+	//Volume of a Square Pyramid
 	//RESET
 	inputA=16'b0000000000000000;
 	op=4'b0001;
@@ -689,8 +691,8 @@ initial begin
 	#10;
 	//---------------------------------
 	//Divide by 100 (Since we squared)
-	//inputA=16'b0010011100010000
-	inputA=16'b0000000001100100;
+	inputA=16'b0000001111101000;
+	//inputA=16'b0000000001100100;
 	op=4'b0101;
 	#5
 	whole = result;
@@ -700,7 +702,6 @@ initial begin
 	inputA=16'b0000000000000000;
 	op=4'b0000;
 	#10;
-	$display("Tested up to here., %d", whole);
 	//---------------------------------
 	//Reset
 	inputA = 16'b0000000000000000;
@@ -733,49 +734,73 @@ initial begin
 	inputA=16'b0000000000000000;
 	op=4'b0000;
 	#10;
-	$display("height 5.7 and side length 22.1 is %3d.%-2d.\n\n\n\n",whole,fraction);
+	$display("The volume of a square pyramid with height 5.7 and side length 2.1 is %3d.%-2d units.\n\n\n\n",whole,fraction);
 
-
-	//Cleanup
+	///////////////////////////////////////////////////////////////////////////////
+	//Adem
+	//Area of a circle with a radius of 2.9 units
 	inputA=16'b0000000000000000;
 	op=4'b0001;
 	#10;
-	$display("result: %2d", result);
 	//---------------------------------
 	//NO-OP
 	inputA=16'b0000000000000000;
 	op=4'b0000;//NO-OP
 	#10;
-	$display("result: %2d", result);
 	//---------------------------------
-	// //Add 2
-	// inputA=16'd2;
-	// op=4'b0010;
-	// #10;
-	// //NO-OP
-	// inputA=16'b0000000000000000;
-	// op=4'b0000;//NO-OP
-	// #10;
-	// $display("result: %2d", result);
-	// //Multiply by 57
-	// inputA=16'b0000000000000010;
-	// op=4'b0100;
-	// #10;
-	// //NO-OP
-	// inputA=16'b0000000000000000;
-	// op=4'b0000;//NO-OP
-	// #10;
-	// $display("result: %2d", result);
-	// //Add 2
-	// inputA=16'd1;
-	// op=4'b0010;
-	// #10;
-	// //NO-OP
-	// inputA=16'b0000000000000000;
-	// op=4'b0000;//NO-OP
-	// #10;
-
-//1100
+	//ADD 29
+	inputA=16'b0000000000011101;
+	op=4'b0010;//ADD
+	#10;
+	//---------------------------------
+	//NO-OP
+	inputA=16'b0000000000000000;
+	op=4'b0000;//NO-OP
+	#10;
+	//---------------------------------
+	//MULTIPLY BY 29 / SQUARE
+	inputA=16'b0000000000011101;
+	op=4'b0100;//MULT
+	#10;
+	//---------------------------------
+	//NO-OP
+	inputA=16'b0000000000000000;
+	op=4'b0000;//NO-OP
+	#10;
+	//---------------------------------
+	//MULTIPLY BY 31 (pi, cant go higher precision due to overflow)
+	inputA=16'b0000000000011111;
+	op=4'b0100;//MULT
+	#10;
+	//--------------------------------- Good until here
+	//NO-OP
+	inputA=16'b0000000000000000;
+	op=4'b0000;//NO-OP
+	#10;
+	//Divide by 1,000 (A^2 scaled up by 100, pi scaled up by 10)
+	inputA=16'b0000001111101000;
+	op=4'b0101;
+	#5
+	whole = result;
+	#5;
+	//---------------------------------
+	//NO-OP
+	inputA=16'b0000000000000000;
+	op=4'b0000;
+	#10;
+	//---------------------------------
+	//Mod by 1,000
+	inputA=16'b0000001111101000;
+	op = 4'b0110;
+	#5;
+	fraction = result;
+	#5;
+	//---------------------------------
+	//NO-OP
+	inputA=16'b0000000000000000;
+	op=4'b0000;
+	#10;
+	$display("The area of a circle with a radius 2.9 is %3d.%-2d units.\n\n\n\n",whole,fraction);
 
 	$finish;
 
