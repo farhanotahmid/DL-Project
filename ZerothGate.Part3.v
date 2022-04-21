@@ -185,206 +185,86 @@ input  [15:0] A;
 input  [15:0] B;
 output [31:0] C;
 
-reg [31:0] C;
-
+wire [31:0] C;
+// TO TEAM: Algorithm used: https://en.wikipedia.org/wiki/Binary_multiplier#Unsigned_integers PLEASE CHECK IF YOU DONT UNDERSTAND
 //Local Variables
-reg  [15:0] Augend0;
-reg  [15:0] Addend0;
-wire [15:0] Sum0;
-wire [15:0]Carry0;
+wire [15:0] p0 = {16{A[0]}} & B;
+wire [15:0] p1 = {16{A[1]}} & B;
+wire [15:0] p2 = {16{A[2]}} & B;
+wire [15:0] p3 = {16{A[3]}} & B;
+wire [15:0] p4 = {16{A[4]}} & B;
+wire [15:0] p5 = {16{A[5]}} & B;
+wire [15:0] p6 = {16{A[6]}} & B;
+wire [15:0] p7 = {16{A[7]}} & B;
+wire [15:0] p8 = {16{A[8]}} & B;
+wire [15:0] p9 = {16{A[9]}} & B;
+wire [15:0] p10 = {16{A[10]}} & B;
+wire [15:0] p11 = {16{A[11]}} & B;
+wire [15:0] p12 = {16{A[12]}} & B;
+wire [15:0] p13 = {16{A[13]}} & B;
+wire [15:0] p14 = {16{A[14]}} & B;
+wire [15:0] p15 = {16{A[15]}} & B;
 
-reg  [15:0] Augend1;
-reg  [15:0] Addend1;
-wire [15:0] Sum1;
-wire [15:0]Carry1;
-
-reg  [15:0] Augend2;
-reg  [15:0] Addend2;
-wire [15:0] Sum2;
-wire [15:0]Carry2;
-
-reg  [15:0] Augend3;
-reg  [15:0] Addend3;
-wire [15:0] Sum3;
-wire [15:0]Carry3;
-
-reg  [15:0] Augend4;
-reg  [15:0] Addend4;
-wire [15:0] Sum4;
-wire [15:0]Carry4;
-
-reg  [15:0] Augend5;
-reg  [15:0] Addend5;
-wire [15:0] Sum5;
-wire [15:0]Carry5;
-
-reg  [15:0] Augend6;
-reg  [15:0] Addend6;
-wire [15:0] Sum6;
-wire [15:0]Carry6;
-
-reg  [15:0] Augend7;
-reg  [15:0] Addend7;
-wire [15:0] Sum7;
-wire [15:0]Carry7;
-
-reg  [15:0] Augend8;
-reg  [15:0] Addend8;
-wire [15:0] Sum8;
-wire [15:0]Carry8;
-
-reg  [15:0] Augend9;
-reg  [15:0] Addend9;
-wire [15:0] Sum9;
-wire [15:0]Carry9;
-
-reg  [15:0] Augend10;
-reg  [15:0] Addend10;
-wire [15:0] Sum10;
-wire [15:0]Carry10;
-
-reg  [15:0] Augend11;
-reg  [15:0] Addend11;
-wire [15:0] Sum11;
-wire [15:0]Carry11;
-
-reg  [15:0] Augend12;
-reg  [15:0] Addend12;
-wire [15:0] Sum12;
-wire [15:0]Carry12;
-
-reg  [15:0] Augend13;
-reg  [15:0] Addend13;
-wire [15:0] Sum13;
-wire [15:0]Carry13;
-
-reg  [15:0] Augend14;
-reg  [15:0] Addend14;
-wire [15:0] Sum14;
-wire [15:0]Carry14;
-
-reg  [15:0] Augend15;
-reg  [15:0] Addend15;
-wire [15:0] Sum15;
-wire [15:0]Carry15;
-
-SixteenBitFullAdder add0(Augend0,Addend0,1'b0,Carry0, Sum0);
-SixteenBitFullAdder add1(Augend1,Addend1,1'b0,Carry1, Sum1);
-SixteenBitFullAdder add2(Augend2,Addend2,1'b0,Carry2, Sum2);
-SixteenBitFullAdder add3(Augend3,Addend3,1'b0,Carry3, Sum3);
-
-SixteenBitFullAdder add4(Augend4,Addend4,1'b0,Carry4, Sum4);
-SixteenBitFullAdder add5(Augend5,Addend5,1'b0,Carry5, Sum5);
-SixteenBitFullAdder add6(Augend6,Addend6,1'b0,Carry6, Sum6);
-SixteenBitFullAdder add7(Augend7,Addend7,1'b0,Carry7, Sum7);
-
-SixteenBitFullAdder add8(Augend8,Addend8,1'b0,Carry8, Sum8);
-SixteenBitFullAdder add9(Augend9,Addend9,1'b0,Carry9, Sum9);
-SixteenBitFullAdder add10(Augend10,Addend10,1'b0,Carry10, Sum10);
-SixteenBitFullAdder add11(Augend11,Addend11,1'b0,Carry11, Sum11);
-
-SixteenBitFullAdder add12(Augend12,Addend12,1'b0,Carry12, Sum12);
-SixteenBitFullAdder add13(Augend13,Addend13,1'b0,Carry13, Sum13);
-SixteenBitFullAdder add14(Augend14,Addend14,1'b0,Carry14, Sum14);
-SixteenBitFullAdder add15(Augend15,Addend15,1'b0,Carry15, Sum15);
+wire [15:0][31:0] sums;
+wire [15:0] carrys;
 
 
-always@(*)
-begin
-Augend0={     1'b0,A[0]&B[15], A[0]&B[14], A[0]&B[13], A[0]&B[12], A[0]&B[11], A[0]&B[10], A[0]&B[9], A[0]&B[8], A[0]&B[7], A[0]&B[6], A[0]&B[5], A[0]&B[4], A[0]&B[3], A[0]&B[2], A[0]&B[1]};
-Addend0= { A[1]&B[15], A[1]&B[14], A[1]&B[13], A[1]&B[12], A[1]&B[11], A[1]&B[10], A[1]&B[9], A[1]&B[8], A[1]&B[7], A[1]&B[6], A[1]&B[5], A[1]&B[4], A[1]&B[3], A[1]&B[2], A[1]&B[1], A[1]&B[0]};
+SixteenBitFullAdder add0({1'b0,p0[15:1]}, 		p1,	1'b0,	carrys[0], 		sums[0]);
+SixteenBitFullAdder add1({1'b0,sums[0][15:1]},	p2,	1'b0,	carrys[1],  	sums[1]);
+SixteenBitFullAdder add2({1'b0,sums[1][15:1]},	p3,	1'b0,	carrys[2],  	sums[2]);
+SixteenBitFullAdder add3({1'b0,sums[2][15:1]},	p4,	1'b0,	carrys[3],  	sums[3]);
 
-Augend1= { Carry0[15], Sum0[15], Sum0[14], Sum0[13], Sum0[12], Sum0[11], Sum0[10], Sum0[9], Sum0[8], Sum0[7], Sum0[6], Sum0[5], Sum0[4], Sum0[3], Sum0[2], Sum0[1]};
-Addend1= { A[2]&B[15], A[2]&B[14], A[2]&B[13], A[2]&B[12], A[2]&B[11], A[2]&B[10], A[2]&B[9], A[2]&B[8], A[2]&B[7], A[2]&B[6], A[2]&B[5], A[2]&B[4], A[2]&B[3], A[2]&B[2], A[2]&B[1], A[2]&B[0]};
+SixteenBitFullAdder add4({1'b0,sums[3][15:1]},	p5,	1'b0,	carrys[4],  	sums[4]);
+SixteenBitFullAdder add5({1'b0,sums[4][15:1]},	p6,	1'b0,	carrys[5],  	sums[5]);
+SixteenBitFullAdder add6({1'b0,sums[5][15:1]},	p7,	1'b0,	carrys[6],  	sums[6]);
+SixteenBitFullAdder add7({1'b0,sums[6][15:1]},	p8,	1'b0,	carrys[7],  	sums[7]);
 
-Augend2= { Carry1[15], Sum1[15], Sum1[14], Sum1[13], Sum1[12], Sum1[11], Sum1[10], Sum1[9], Sum1[8], Sum1[7], Sum1[6], Sum1[5], Sum1[4], Sum1[3], Sum1[2], Sum1[1]};
-Addend2= { A[3]&B[15], A[3]&B[14], A[3]&B[13], A[3]&B[12], A[3]&B[11], A[3]&B[10], A[3]&B[9], A[3]&B[8], A[3]&B[7], A[3]&B[6], A[3]&B[5], A[3]&B[4], A[3]&B[3], A[3]&B[2], A[3]&B[1], A[3]&B[0]};
+SixteenBitFullAdder add8({1'b0,sums[7][15:1]},	p9,	1'b0,	carrys[8],  	sums[8]);
+SixteenBitFullAdder add9({1'b0,sums[8][15:1]},	p10,1'b0,	carrys[9],  	sums[9]);
+SixteenBitFullAdder add10({1'b0,sums[9][15:1]},	p11,1'b0,	carrys[10],  	sums[10]);
+SixteenBitFullAdder add11({1'b0,sums[10][15:1]},p12,1'b0,	carrys[11],  	sums[11]);
 
-
-Augend3= { Carry2[15], Sum2[15], Sum2[14], Sum2[13], Sum2[12], Sum2[11], Sum2[10], Sum2[9], Sum2[8], Sum2[7], Sum2[6], Sum2[5], Sum2[4], Sum2[3], Sum2[2], Sum2[1]};
-Addend3= { A[4]&B[15], A[4]&B[14], A[4]&B[13], A[4]&B[12], A[4]&B[11], A[4]&B[10], A[4]&B[9], A[4]&B[8], A[4]&B[7], A[4]&B[6], A[4]&B[5], A[4]&B[4], A[4]&B[3], A[4]&B[2], A[4]&B[1], A[4]&B[0]};
-
-Augend4= { Carry3[15], Sum3[15], Sum3[14], Sum3[13], Sum3[12], Sum3[11], Sum3[10], Sum3[9], Sum3[8], Sum3[7], Sum3[6], Sum3[5], Sum3[4], Sum3[3], Sum3[2], Sum3[1]};
-Addend4= { A[5]&B[15], A[5]&B[14], A[5]&B[13], A[5]&B[12], A[5]&B[11], A[5]&B[10], A[5]&B[9], A[5]&B[8], A[5]&B[7], A[5]&B[6], A[5]&B[5], A[5]&B[4], A[5]&B[3], A[5]&B[2], A[5]&B[1], A[5]&B[0]};
-
-
-Augend5= { Carry4[15], Sum4[15], Sum4[14], Sum4[13], Sum4[12], Sum4[11], Sum4[10], Sum4[9], Sum4[8], Sum4[7], Sum4[6], Sum4[5], Sum4[4], Sum4[3], Sum4[2], Sum4[1]};
-Addend5= { A[6]&B[15], A[6]&B[14], A[6]&B[13], A[6]&B[12], A[6]&B[11], A[6]&B[10], A[6]&B[9], A[6]&B[8], A[6]&B[7], A[6]&B[6], A[6]&B[5], A[6]&B[4], A[6]&B[3], A[6]&B[2], A[6]&B[1], A[6]&B[0]};
-
-
-Augend6= { Carry5[15], Sum5[15], Sum5[14], Sum5[13], Sum5[12], Sum5[11], Sum5[10], Sum5[9], Sum5[8], Sum5[7], Sum5[6], Sum5[5], Sum5[4], Sum5[3], Sum5[2], Sum5[1]};
-Addend6= { A[7]&B[15], A[7]&B[14], A[7]&B[13], A[7]&B[12], A[7]&B[11], A[7]&B[10], A[7]&B[9], A[7]&B[8], A[7]&B[7], A[7]&B[6], A[7]&B[5], A[7]&B[4], A[7]&B[3], A[7]&B[2], A[7]&B[1], A[7]&B[0]};
-
-
-Augend7= { Carry6[15], Sum6[15], Sum6[14], Sum6[13], Sum6[12], Sum6[11], Sum6[10], Sum6[9], Sum6[8], Sum6[7], Sum6[6], Sum6[5], Sum6[4], Sum6[3], Sum6[2], Sum6[1]};
-Addend7= { A[8]&B[15], A[8]&B[14], A[8]&B[13], A[8]&B[12], A[8]&B[11], A[8]&B[10], A[8]&B[9], A[8]&B[8], A[8]&B[7], A[8]&B[6], A[8]&B[5], A[8]&B[4], A[8]&B[3], A[8]&B[2], A[8]&B[1], A[8]&B[0]};
-
-
-Augend8= { Carry7[15], Sum7[15], Sum7[14], Sum7[13], Sum7[12], Sum7[11], Sum7[10], Sum7[9], Sum7[8], Sum7[7], Sum7[6], Sum7[5], Sum7[4], Sum7[3], Sum7[2], Sum7[1]};
-Addend8= { A[9]&B[15], A[9]&B[14], A[9]&B[13], A[9]&B[12], A[9]&B[11], A[9]&B[10], A[9]&B[9], A[9]&B[8], A[9]&B[7], A[9]&B[6], A[9]&B[5], A[9]&B[4], A[9]&B[3], A[9]&B[2], A[9]&B[1], A[9]&B[0]};
-
-
-Augend9= { Carry8[15], Sum8[15], Sum8[14], Sum8[13], Sum8[12], Sum8[11], Sum8[10], Sum8[9], Sum8[8], Sum8[7], Sum8[6], Sum8[5], Sum8[4], Sum8[3], Sum8[2], Sum8[1]};
-Addend9= { A[10]&B[15], A[10]&B[14], A[10]&B[13], A[10]&B[12], A[10]&B[11], A[10]&B[10], A[10]&B[9], A[10]&B[8], A[10]&B[7], A[10]&B[6], A[10]&B[5], A[10]&B[4], A[10]&B[3], A[10]&B[2], A[10]&B[1], A[10]&B[0]};
-
-
-Augend10= { Carry9[15], Sum9[15], Sum9[14], Sum9[13], Sum9[12], Sum9[11], Sum9[10], Sum9[9], Sum9[8], Sum9[7], Sum9[6], Sum9[5], Sum9[4], Sum9[3], Sum9[2], Sum9[1]};
-Addend10= { A[11]&B[15], A[11]&B[14], A[11]&B[13], A[11]&B[12], A[11]&B[11], A[11]&B[10], A[11]&B[9], A[11]&B[8], A[11]&B[7], A[11]&B[6], A[11]&B[5], A[11]&B[4], A[11]&B[3], A[11]&B[2], A[11]&B[1], A[11]&B[0]};
-
-
-Augend11= { Carry10[15], Sum10[15], Sum10[14], Sum10[13], Sum10[12], Sum10[11], Sum10[10], Sum10[9], Sum10[8], Sum10[7], Sum10[6], Sum10[5], Sum10[4], Sum10[3], Sum10[2], Sum10[1]};
-Addend11= { A[12]&B[15], A[12]&B[14], A[12]&B[13], A[12]&B[12], A[12]&B[11], A[12]&B[10], A[12]&B[9], A[12]&B[8], A[12]&B[7], A[12]&B[6], A[12]&B[5], A[12]&B[4], A[12]&B[3], A[12]&B[2], A[12]&B[1], A[12]&B[0]};
-
-
-Augend12= { Carry11[15], Sum11[15], Sum11[14], Sum11[13], Sum11[12], Sum11[11], Sum11[10], Sum11[9], Sum11[8], Sum11[7], Sum11[6], Sum11[5], Sum11[4], Sum11[3], Sum11[2], Sum11[1]};
-Addend12= { A[13]&B[15], A[13]&B[14], A[13]&B[13], A[13]&B[12], A[13]&B[11], A[13]&B[10], A[13]&B[9], A[13]&B[8], A[13]&B[7], A[13]&B[6], A[13]&B[5], A[13]&B[4], A[13]&B[3], A[13]&B[2], A[13]&B[1], A[13]&B[0]};
-
-
-Augend13= { Carry12[15], Sum12[15], Sum12[14], Sum12[13], Sum12[12], Sum12[11], Sum12[10], Sum12[9], Sum12[8], Sum12[7], Sum12[6], Sum12[5], Sum12[4], Sum12[3], Sum12[2], Sum12[1]};
-Addend13= { A[14]&B[15], A[14]&B[14], A[14]&B[13], A[14]&B[12], A[14]&B[11], A[14]&B[10], A[14]&B[9], A[14]&B[8], A[14]&B[7], A[14]&B[6], A[14]&B[5], A[14]&B[4], A[14]&B[3], A[14]&B[2], A[14]&B[1], A[14]&B[0]};
-
-
-Augend14= { Carry13[15], Sum13[15], Sum13[14], Sum13[13], Sum13[12], Sum13[11], Sum13[10], Sum13[9], Sum13[8], Sum13[7], Sum13[6], Sum13[5], Sum13[4], Sum13[3], Sum13[2], Sum13[1]};
-Addend14= { A[15]&B[15], A[15]&B[14], A[15]&B[13], A[15]&B[12], A[15]&B[11], A[15]&B[10], A[15]&B[9], A[15]&B[8], A[15]&B[7], A[15]&B[6], A[15]&B[5], A[15]&B[4], A[15]&B[3], A[15]&B[2], A[15]&B[1], A[15]&B[0]};
+SixteenBitFullAdder add12({1'b0,sums[11][15:1]},p13,1'b0,	carrys[12],  	sums[12]);
+SixteenBitFullAdder add13({1'b0,sums[12][15:1]},p14,1'b0,	carrys[13],  	sums[13]);
+SixteenBitFullAdder add14({1'b0,sums[13][15:1]},p15,1'b0,	carrys[14],  	sums[14]);
 
 //$display("%b %b", C[2], C[1]);
-C[0]=  A[0]&B[0];//From Gates
+assign C[0]=  p0[0];
 //=================================
-C[1]=  Sum0[0];//From Adder0
+assign C[1]=  sums[0][0];
 //=================================
-C[2]=  Sum1[0];//From Adder1
+assign C[2]=  sums[1][0];//From Adder1
 //=================================
-C[3] = Sum2[0];//From Adder2
-C[4] = Sum3[0];//From Adder3
-C[5] = Sum4[0];//From Adder4
-C[6] = Sum5[0];//From Adder5
-C[7] = Sum6[0];//From Adder2
-C[8] = Sum7[0];
-C[9] = Sum8[0];
-C[10] = Sum9[0];
-C[11] = Sum10[0];
-C[12] = Sum11[0];
-C[13] = Sum12[0];
-C[14] = Sum13[0];
+assign C[3] = sums[2][0];
+assign C[4] = sums[3][0];
+assign C[5] = sums[4][0];
+assign C[6] = sums[5][0];
+assign C[7] = sums[6][0];
+assign C[8] = sums[7][0];
+assign C[9] = sums[8][0];
+assign C[10] = sums[9][0];
+assign C[11] = sums[10][0];
+assign C[12] = sums[11][0];
+assign C[13] = sums[12][0];
+assign C[14] = sums[13][0];
 //---------------------------------
-C[15] = Sum14[0];
-C[16] = Sum14[1];
-C[17] = Sum14[2];
-C[18] = Sum14[3];
-C[19] = Sum14[4];
-C[20] = Sum14[5];
-C[21] = Sum14[6];
-C[22] = Sum14[7];
-C[23] = Sum14[8];
-C[24] = Sum14[9];
-C[25] = Sum14[10];
-C[26] = Sum14[11];
-C[27] = Sum14[12];
-C[28] = Sum14[13];
-C[29] = Sum14[14];
-C[30] = Sum14[15];
-C[31] = Carry14[15];
-end
+assign C[15] = sums[14][0];
+assign C[16] = sums[14][1];
+assign C[17] = sums[14][2];
+assign C[18] = sums[14][3];
+assign C[19] = sums[14][4];
+assign C[20] = sums[14][5];
+assign C[21] = sums[14][6];
+assign C[22] = sums[14][7];
+assign C[23] = sums[14][8];
+assign C[24] = sums[14][9];
+assign C[25] = sums[14][10];
+assign C[26] = sums[14][11];
+assign C[27] = sums[14][12];
+assign C[28] = sums[14][13];
+assign C[29] = sums[14][14];
+assign C[30] = sums[14][15];
+assign C[31] = sums[14][16];
 endmodule
 
 //OPCODE = 0101
@@ -691,6 +571,9 @@ module testbench();
 	//Outputs
 	wire[31:0]result;
 
+	reg [31:0] fraction;
+	reg [31:0] whole;
+	reg [31:0] hold;
 
 
 	//Instantiate the Modules
@@ -721,13 +604,13 @@ module testbench();
 
 
 		 case (op)
-		 0: $display("Input:%16b Feedback:%16b NO-OP Opcode:%4b Output:%32b Err:%2b",inputA, board.regB, op, board.b, err);
-		 1: $display("Input:%16b Feedback:%16b RESET Opcode:%4b Output %32b Err:%2b",16'b0000,board.regB, op, board.b, err);
-		 2: $display("Input:%16b Feedback:%16b ADD Opcode:%4b Output:%32b Err:%2b",inputA, board.regB, op, board.b, err);
-		 3: $display("Input:%16b Feedback:%16b SUB Opcode:%4b Output:%32b Err:%2b",inputA, board.regB, op, board.b, err);
-		 4: $display("Input:%16b Feedback:%16b MUL Opcode:%4b Output:%32b Err:%2b",inputA, board.regB, op, board.b, err);
-		 5: $display("Input:%16b Feedback:%16b DIV Opcode:%4b Output:%32b Err:%2b",inputA, board.regB, op, board.b, err);
-		 6: $display("Input:%16b Feedback:%16b MOD Opcode:%4b Output:%32b Err:%2b",inputA, board.regB, op, board.b, err);
+		 0: $display("Binary: [%16b] NO-OP [%16b] = [%32b] [Opcode:%4b] Err: %2b",inputA, board.regB, board.b, op, err);
+		 1: $display("Binary: [%16b] RESET [%16b] = [%32b] [Opcode:%4b] Err: %2b",16'b0000,board.regB, board.b, op, err);
+		 2: $display("Binary: [%16b] + [%16b] = [%32b] [Opcode:%4b] Err: %2b",inputA, board.regB, board.b, op,  err);
+		 3: $display("Binary: [%16b] - [%16b] = [%32b] [Opcode:%4b] Err: %2b",inputA, board.regB, board.b, op, err);
+		 4: $display("Binary: [%16b] * [%16b] = [%32b] [Opcode:%4b] Err: %2b",inputA, board.regB, board.b, op, err);
+		 5: $display("Binary: [%16b] / [%16b] = [%32b] [Opcode:%4b] Err: %2b",board.regB, inputA, board.b, op, err);
+		 6: $display("Binary: [%16b] mod [%16b] = [%32b] [Opcode:%4b] Err: %2b",board.regB, inputA, board.b, op, err);
 		 7: $display("Input:%16b Feedback:%16b AND Opcode:%4b Output:%32b Err:%2b",inputA, board.regB, op, board.b, err);
 		 8: $display("Input:%16b Feedback:%16b NAND Opcode:%4b Output:%32b Err:%2b",inputA, board.regB, op, board.b, err);
 		 9: $display("Input:%16b Feedback:%16b NOR Opcode:%4b Output:%32b Err:%2b",inputA, board.regB, op, board.b, err);
@@ -735,8 +618,9 @@ module testbench();
 		 11: $display("Input:%16b Feedback:%16b OR Opcode:%4b Output:%32b Err:%2b",inputA, board.regB, op, board.b, err);
 		 12: $display("Input:%16b Feedback:%16b XNOR Opcode:%4b Output:%32b Err:%2b",inputA, board.regB, op, board.b, err);
 		 13: $display("Input:%16b Feedback:%16b XOR Opcode:%4b Output:%32b Err:%2b",inputA, board.regB, op, board.b, err);
+		 14: $display("Unknown Opcode.");
 		 15: $display("Input:%16b Feedback:%16b PRESET Opcode:%4b Output:%32b Err:%2b",inputA, board.regB, op, board.b, err);
-		 
+
 		 endcase
 
 		 #10;
@@ -749,74 +633,176 @@ module testbench();
 initial begin
 
 //=================================================
-//STIMULOUS Thread
+//STIMULUS Thread
 //=================================================
 
-	#6;	
-	//---------------------------------
+	#6;
+	///////////////////////////////////////////////////////////////////////////////
+	//Adem
+	//Volume of a Square Pyramid
+	//RESET
 	inputA=16'b0000000000000000;
-	op=4'b0001;//RESET
+	op=4'b0001;
 	#10;
 	//---------------------------------
+	//NO-OP
 	inputA=16'b0000000000000000;
 	op=4'b0000;//NO-OP
-	#10; 
-	//---------------------------------	
-	inputA=16'b0000000000000111;
+	#10;
+	//---------------------------------
+	//Add 21
+	inputA=16'b0000000000010101;
+	op=4'b0010;
+	#10;
+	//---------------------------------
+	//NO-OP
+	inputA=16'b0000000000000000;
+	op=4'b0000;
+	#10;
+	//---------------------------------
+	//Multiply by 21/ square
+	inputA=16'b0000000000010101;
+	op=4'b0100;
+	#10;
+	//---------------------------------
+	//NO-OP
+	inputA=16'b0000000000000000;
+	op=4'b0000;
+	#10;
+	//---------------------------------
+	//Multiply by 57
+	inputA=16'b0000000000111001;
+	op=4'b0100;
+	#10;
+	//---------------------------------
+	//NO-OP
+	inputA=16'b0000000000000000;
+	op=4'b0000;
+	#10;
+	//Divide by 3
+	inputA=16'b0000000000000011;
+	op=4'b0101;
+	#10;
+	//---------------------------------
+	//NO-OP
+	inputA=16'b0000000000000000;
+	op=4'b0000;
+	hold = result;
+	#10;
+	//---------------------------------
+	//Divide by 100 (Since we squared)
+	inputA=16'b0000001111101000;
+	//inputA=16'b0000000001100100;
+	op=4'b0101;
+	#5
+	whole = result;
+	#5;
+	//---------------------------------
+	//NO-OP
+	inputA=16'b0000000000000000;
+	op=4'b0000;
+	#10;
+	//---------------------------------
+	//Reset
+	inputA = 16'b0000000000000000;
+	op = 4'b0001;
+	#10;
+	//---------------------------------
+	//NO-OP
+	inputA=16'b0000000000000000;
+	op=4'b0000;//NOT
+	#10;
+	//---------------------------------
+	//Add hold var
+	inputA = hold;
+	op = 4'b0010;
+	#10;
+	//---------------------------------
+	//NO-OP
+	inputA=16'b0000000000000000;
+	op=4'b0000;
+	#10;
+	//---------------------------------
+	//Mod by 10
+	inputA = 16'b0000000000001010;
+	op = 4'b0110;
+	#5;
+	fraction = result;
+	#5;
+	//---------------------------------
+	//NO-OP
+	inputA=16'b0000000000000000;
+	op=4'b0000;
+	#10;
+	$display("The volume of a square pyramid with height 5.7 and side length 2.1 is %3d.%-2d units.\n\n\n\n",whole,fraction);
+
+	///////////////////////////////////////////////////////////////////////////////
+	//Adem
+	//Area of a circle with a radius of 2.9 units
+	inputA=16'b0000000000000000;
+	op=4'b0001;
+	#10;
+	//---------------------------------
+	//NO-OP
+	inputA=16'b0000000000000000;
+	op=4'b0000;//NO-OP
+	#10;
+	//---------------------------------
+	//ADD 29
+	inputA=16'b0000000000011101;
 	op=4'b0010;//ADD
 	#10;
-	//---------------------------------	
-	inputA=16'b0000000000000011;
-	op=4'b0011;//SUB
-	#10;
-	//---------------------------------	
-	inputA=16'b0000000011111010;
-	op=4'b0100;//MUL
-	#10;
-	//---------------------------------	
-	inputA=16'b0000000000100000;
-	op=4'b0101;//DIV
-	#10;
-	//---------------------------------	
-	inputA=16'b0000000000000100;
-	op=4'b0110;//MOD
-	#10;
-	//---------------------------------	
-	inputA=16'b0000000000100000;
-	op=4'b0111;//AND
-	#10;
-	//---------------------------------	
-	inputA=16'b0000000000101010;
-	op=4'b1011;//OR
-	#10;
-	//---------------------------------	
+	//---------------------------------
+	//NO-OP
 	inputA=16'b0000000000000000;
-	op=4'b1010;//NOT
+	op=4'b0000;//NO-OP
 	#10;
-	//---------------------------------	
-	inputA=16'b1111111111111111;
-	op=4'b1101;//XOR
+	//---------------------------------
+	//MULTIPLY BY 29 / SQUARE
+	inputA=16'b0000000000011101;
+	op=4'b0100;//MULT
 	#10;
-	//---------------------------------	
-	inputA=16'b1111111111110101;
-	op=4'b1100;//XNOR
-	#10;
-	//---------------------------------	
-	inputA=16'b1111111111111111;
-	op=4'b1000;//NAND
-	#10;
-	//---------------------------------	
-	inputA=16'b1111111111111111;
-	op=4'b1001;//NOR
-	#10;
-	//---------------------------------	
+	//---------------------------------
+	//NO-OP
 	inputA=16'b0000000000000000;
-	op=4'b1111;//PRESET
+	op=4'b0000;//NO-OP
 	#10;
-	
-//1100
+	//---------------------------------
+	//MULTIPLY BY 31 (pi, cant go higher precision due to overflow)
+	inputA=16'b0000000000011111;
+	op=4'b0100;//MULT
+	#10;
+	//--------------------------------- Good until here
+	//NO-OP
+	inputA=16'b0000000000000000;
+	op=4'b0000;//NO-OP
+	#10;
+	//Divide by 1,000 (A^2 scaled up by 100, pi scaled up by 10)
+	inputA=16'b0000001111101000;
+	op=4'b0101;
+	#5
+	whole = result;
+	#5;
+	//---------------------------------
+	//NO-OP
+	inputA=16'b0000000000000000;
+	op=4'b0000;
+	#10;
+	//---------------------------------
+	//Mod by 1,000
+	inputA=16'b0000001111101000;
+	op = 4'b0110;
+	#5;
+	fraction = result;
+	#5;
+	//---------------------------------
+	//NO-OP
+	inputA=16'b0000000000000000;
+	op=4'b0000;
+	#10;
+	$display("The area of a circle with a radius 2.9 is %3d.%-2d units.\n\n\n\n",whole,fraction);
 
 	$finish;
-	
+
 end
 endmodule
