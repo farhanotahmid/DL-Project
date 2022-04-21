@@ -604,13 +604,13 @@ module testbench();
 
 
 		 case (op)
-		 0: $display("Input:%16b Feedback:%16b NO-OP Opcode:%4b Output:%32b Err:%2b",inputA, board.regB, op, board.b, err);
-		 1: $display("Input:%16b Feedback:%16b RESET Opcode:%4b Output %32b Err:%2b",16'b0000,board.regB, op, board.b, err);
-		 2: $display("Input:%16b Feedback:%16b ADD Opcode:%4b Output:%32b Err:%2b",inputA, board.regB, op, board.b, err);
-		 3: $display("Input:%16b Feedback:%16b SUB Opcode:%4b Output:%32b Err:%2b",inputA, board.regB, op, board.b, err);
-		 4: $display("Input:%16b Feedback:%16b MUL Opcode:%4b Output:%32b Err:%2b",inputA, board.regB, op, board.b, err);
-		 5: $display("Input:%16b Feedback:%16b DIV Opcode:%4b Output:%32b Err:%2b",inputA, board.regB, op, board.b, err);
-		 6: $display("Input:%16b Feedback:%16b MOD Opcode:%4b Output:%32b Err:%2b",inputA, board.regB, op, board.b, err);
+		 0: $display("Binary: [%16b] NO-OP [%16b] = [%32b] [Opcode:%4b] Err: %2b",inputA, board.regB, board.b, op, err);
+		 1: $display("Binary: [%16b] RESET [%16b] = [%32b] [Opcode:%4b] Err: %2b",16'b0000,board.regB, board.b, op, err);
+		 2: $display("Binary: [%16b] + [%16b] = [%32b] [Opcode:%4b] Err: %2b",inputA, board.regB, board.b, op,  err);
+		 3: $display("Binary: [%16b] - [%16b] = [%32b] [Opcode:%4b] Err: %2b",inputA, board.regB, board.b, op, err);
+		 4: $display("Binary: [%16b] * [%16b] = [%32b] [Opcode:%4b] Err: %2b",inputA, board.regB, board.b, op, err);
+		 5: $display("Binary: [%16b] / [%16b] = [%32b] [Opcode:%4b] Err: %2b",board.regB, inputA, board.b, op, err);
+		 6: $display("Binary: [%16b] mod [%16b] = [%32b] [Opcode:%4b] Err: %2b",board.regB, inputA, board.b, op, err);
 		 7: $display("Input:%16b Feedback:%16b AND Opcode:%4b Output:%32b Err:%2b",inputA, board.regB, op, board.b, err);
 		 8: $display("Input:%16b Feedback:%16b NAND Opcode:%4b Output:%32b Err:%2b",inputA, board.regB, op, board.b, err);
 		 9: $display("Input:%16b Feedback:%16b NOR Opcode:%4b Output:%32b Err:%2b",inputA, board.regB, op, board.b, err);
@@ -618,6 +618,7 @@ module testbench();
 		 11: $display("Input:%16b Feedback:%16b OR Opcode:%4b Output:%32b Err:%2b",inputA, board.regB, op, board.b, err);
 		 12: $display("Input:%16b Feedback:%16b XNOR Opcode:%4b Output:%32b Err:%2b",inputA, board.regB, op, board.b, err);
 		 13: $display("Input:%16b Feedback:%16b XOR Opcode:%4b Output:%32b Err:%2b",inputA, board.regB, op, board.b, err);
+		 14: $display("Unknown Opcode.");
 		 15: $display("Input:%16b Feedback:%16b PRESET Opcode:%4b Output:%32b Err:%2b",inputA, board.regB, op, board.b, err);
 
 		 endcase
@@ -648,8 +649,8 @@ initial begin
 	op=4'b0000;//NO-OP
 	#10;
 	//---------------------------------
-	//Add 221
-	inputA=16'b0000000011011101;
+	//Add 21
+	inputA=16'b0000000000010101;
 	op=4'b0010;
 	#10;
 	$display("result: %2d", result);
@@ -659,11 +660,11 @@ initial begin
 	op=4'b0000;
 	#10;
 	//---------------------------------
-	//Multiply by 221/ square
-	inputA=16'b0000000011011101;
+	//Multiply by 21/ square
+	inputA=16'b0000000000010101;
 	op=4'b0100;
 	#10;
-	$display("result: %2d", result);
+	$display("result: %d or %b", result, result);
 	//---------------------------------
 	//NO-OP
 	inputA=16'b0000000000000000;
@@ -674,7 +675,7 @@ initial begin
 	inputA=16'b0000000000111001;
 	op=4'b0100;
 	#10;
-	$display("result: %2d", result);
+	$display("Tested up to here.");
 	//---------------------------------
 	//NO-OP
 	inputA=16'b0000000000000000;
@@ -684,14 +685,15 @@ initial begin
 	//---------------------------------
 	//Divide by 30
 	inputA=16'b0000000000011110;
-	op=4'b1011;
+	op=4'b0101;
 	#10;
-	whole = result;
-	$display("result: %2d", result);
+
+	$display("whole: %b, %d", whole, whole);
 	//---------------------------------
 	//NO-OP
 	inputA=16'b0000000000000000;
 	op=4'b0000;
+	whole = result;
 	#10;
 	//---------------------------------
 	//Reset
@@ -699,6 +701,7 @@ initial begin
 	op = 4'b0001;
 	#10;
 	$display("result: %2d", result);
+	$display("whole: %b, %d", whole, whole);
 	//---------------------------------
 	//NO-OP
 	inputA=16'b0000000000000000;
@@ -710,30 +713,32 @@ initial begin
 	op = 4'b0010;
 	#10;
 	$display("result: %2d", result);
+	$display("whole: %b, %d", whole, whole);
 	//---------------------------------
 	//NO-OP
 	inputA=16'b0000000000000000;
-	op=4'b1010;//NOT
+	op=4'b0000;
 	#10;
 	$display("result: %2d", result);
 	//---------------------------------
 	//Mod by 30
 	inputA = 16'b0000000000011110;
-	op = 4'b0010;
+	op = 4'b0110;
 	#10;
 	fraction = result;
 	$display("result: %2d", result);
+	$display("whole: %b, %d", whole, whole);
 	//---------------------------------
 	//NO-OP
 	inputA=16'b0000000000000000;
-	op=4'b1010;//NOT
+	op=4'b0000;
 	#10;
 	$display("height 5.7 and side length 22.1 is %3d.%-2d.\n\n\n\n",whole,fraction);
-	//dfgihuwefpoihsfd
-	//
-	//
-	//
-	//
+	$display("whole: %b, %d", whole, whole);
+	$display("fraction: %b, %d", fraction, fraction);
+
+
+	//Cleanup
 	inputA=16'b0000000000000000;
 	op=4'b0001;
 	#10;
@@ -745,32 +750,32 @@ initial begin
 	#10;
 	$display("result: %2d", result);
 	//---------------------------------
-	//Add 2
-	inputA=16'd2;
-	op=4'b0010;
-	#10;
-	//NO-OP
-	inputA=16'b0000000000000000;
-	op=4'b0000;//NO-OP
-	#10;
-	$display("result: %2d", result);
-	//Multiply by 57
-	inputA=16'b0000000000000010;
-	op=4'b0100;
-	#10;
-	//NO-OP
-	inputA=16'b0000000000000000;
-	op=4'b0000;//NO-OP
-	#10;
-	$display("result: %2d", result);
-	//Add 2
-	inputA=16'd1;
-	op=4'b0010;
-	#10;
-	//NO-OP
-	inputA=16'b0000000000000000;
-	op=4'b0000;//NO-OP
-	#10;
+	// //Add 2
+	// inputA=16'd2;
+	// op=4'b0010;
+	// #10;
+	// //NO-OP
+	// inputA=16'b0000000000000000;
+	// op=4'b0000;//NO-OP
+	// #10;
+	// $display("result: %2d", result);
+	// //Multiply by 57
+	// inputA=16'b0000000000000010;
+	// op=4'b0100;
+	// #10;
+	// //NO-OP
+	// inputA=16'b0000000000000000;
+	// op=4'b0000;//NO-OP
+	// #10;
+	// $display("result: %2d", result);
+	// //Add 2
+	// inputA=16'd1;
+	// op=4'b0010;
+	// #10;
+	// //NO-OP
+	// inputA=16'b0000000000000000;
+	// op=4'b0000;//NO-OP
+	// #10;
 
 //1100
 
